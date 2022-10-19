@@ -8,19 +8,19 @@ With this Widget, you can build a custom calendar.
 - [Parameters](#parameters)
 
 ## Introduction
-This package `alh_calendar` is inspired by ([Link](https://pub.dev/packages/flutter_neat_and_clean_calendar)) the `flutter_neat_and_clean_calendar`
+This package `alh_calendar` is inspired by `flutter_neat_and_clean_calendar`([Link](https://pub.dev/packages/flutter_neat_and_clean_calendar))
 and build from scratch.
 
 With this package you are able to:
-    - create your own CalendarHeader
-    - create your own TableRow which shows the days of week
-    - create your own TableCell which each represents a day 
-    - create navigate threw the months via buttons or swipe
-    - show the dates of previous month and next month
-    - define a maximum and minimum month
-    - define a maximum and minimum day 
-    - usefull callBacks
-    - Tests for the whole written code on `Dart`
+- create your own CalendarHeader
+- create your own TableRow which shows the days of week
+- create your own TableCell which each represents a day
+- create navigate threw the months via buttons or swipe
+- show the dates of previous month and next month
+- define a maximum and minimum month
+- define a maximum and minimum day
+- usefull callBacks
+- Tests for the whole written code on `Dart`
 
 ## Usage
 
