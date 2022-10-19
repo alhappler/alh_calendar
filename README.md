@@ -86,6 +86,13 @@ Widget build(BuildContext context) {
   );
 }
 ```
+
+<p>
+<img src="https://github.com/alhappler/alh_calendar/blob/master/doc/calendar_demo.gif?raw=true"
+    alt="An animated image of the iOS ReordableGridView UI" height="400"/>
+</p>
+
+
 ## Parameters
 This is a list of all parameters that can be used for this widget.
 
