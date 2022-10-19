@@ -1,4 +1,4 @@
-![Pub Version](https://img.shields.io/pub/v/alh_calendar?color=%23397ab6&style=flat-square)
+![Pub Version](https://img.shields.io/pub/v/alh_calendar?include_prereleases&color=%23397ab6&style=flat-square)
 [![codecov](https://codecov.io/gh/alhappler/alh_calendar/branch/master/graph/badge.svg?token=D63TLGD5SP)](https://codecov.io/gh/alhappler/alh_calendar)
 ![GitHub branch checks state](https://img.shields.io/github/checks-status/alhappler/alh_calendar/master?style=flat-square)
 
