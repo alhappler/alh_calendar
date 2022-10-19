@@ -1,3 +1,11 @@
+![Pub Version](https://img.shields.io/pub/v/alh_calendar?color=%23397ab6&style=flat-square)
+[![codecov](https://codecov.io/gh/alhappler/alh_calendar/branch/master/graph/badge.svg?token=D63TLGD5SP)](https://codecov.io/gh/alhappler/alh_calendar)
+![GitHub branch checks state](https://img.shields.io/github/checks-status/alhappler/alh_calendar/master?style=flat-square)
+
+<p>
+<img src="https://github.com/alhappler/alh_calendar/blob/master/doc/calendar_demo.gif?raw=true"
+    alt="An animated image of the iOS ReordableGridView UI" height="400"/>
+</p>
 
 With this Widget, you can build a custom calendar.
 
@@ -87,12 +95,6 @@ Widget build(BuildContext context) {
   );
 }
 ```
-
-<p>
-<img src="https://github.com/alhappler/alh_calendar/blob/master/doc/calendar_demo.gif?raw=true"
-    alt="An animated image of the iOS ReordableGridView UI" height="400"/>
-</p>
-
 
 ## Parameters
 This is a list of all parameters that can be used for this widget.
