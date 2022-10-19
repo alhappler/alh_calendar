@@ -3,11 +3,12 @@ With this Widget, you can build a custom calendar.
 
 ## Index
 - [Introduction](#introduction)
+- [Usage](#usage)
 - [Example](#example)
 - [Parameters](#parameters)
 
 ## Introduction
-This package `alh_calendar` is inspired by ([Link](https://pub.dev/packages/flutter_clean_calendar)) 
+This package `alh_calendar` is inspired by ([Link](https://pub.dev/packages/flutter_neat_and_clean_calendar)) the `flutter_neat_and_clean_calendar`
 and build from scratch.
 
 With this package you are able to:
