@@ -1,0 +1,21 @@
+name: $(Date:yyyyMMdd)$(Rev:r)
+variables:
+  PACKAGE_NAME: 'alh_calendar'
+  MONO_REPO_DIRECTORY: '$(System.DefaultWorkingDirectory)'
+  SOURCE_CODE_DIRECTORY: '$(MONO_REPO_DIRECTORY)/packages/$(PACKAGE_NAME)'
+  FLUTTER_CHANNEL: 'stable'
+  FLUTTER_VERSION: 'latest'
+  CACHE_KEY: '$(SOURCE_CODE_DIRECTORY)/pubspec.yaml'
+  # System.Debug auf true um debugging output von Azure Pipelines zu bekommen
+  System.Debug: 'true'
+
+trigger: none
+
+jobs:
+  - template: ../../tools/pipeline_templates/default_pipeline.yml
+    parameters:
+      flutterChannel: $(FLUTTER_CHANNEL)
+      flutterVersion: $(FLUTTER_VERSION)
+      sourceCodeDirectory: $(SOURCE_CODE_DIRECTORY)
+      monoRepoDirectory: $(MONO_REPO_DIRECTORY)
+      cacheKey: $(CACHE_KEY)
