@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
     DayOfWeek.tuesday: 'Tue',
     DayOfWeek.friday: 'Fri',
     DayOfWeek.saturday: 'Sat',
-    DayOfWeek.sunday: 'XXX',
+    DayOfWeek.sunday: 'Sun',
   };
 
   @override
