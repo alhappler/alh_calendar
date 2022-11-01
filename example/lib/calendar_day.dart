@@ -44,6 +44,17 @@ class CalendarDay extends StatelessWidget {
         color: Colors.red,
       );
     } else if (calendarDayBuilderModel.isWeekend) {
+      if(!calendarDayBuilderModel.isInCurrentMonth){
+        return BoxDecoration(
+          shape: BoxShape.circle,
+          color: Theme.of(context).primaryColor.withOpacity(0.4),
+        );
+      } else {
+        return BoxDecoration(
+          shape: BoxShape.circle,
+          color: Theme.of(context).primaryColor,
+        );
+      }
       return BoxDecoration(
         shape: BoxShape.circle,
         color: Theme.of(context).primaryColor,

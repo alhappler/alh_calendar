@@ -58,13 +58,13 @@ Widget build(BuildContext context) {
                     enableHorizontalSwipe: true,
                     enableSixWeeksForEveryMonth: true,
                     onReachedMinimumDate: () {
-                      log("MInimum Date erreicht");
+                      log("REACHED MIN");
                     },
                     onReachedMaximumDate: () {
                       log("REACHED MAX");
                     },
                     onMonthChanged: (selectedMonth) {
-                      log('Month has changed $selectedMonth');
+                      log('MONTH HAS CHANGED $selectedMonth');
                     },
                     onDayChanged: (selectedDay) {
                       log('SELECTED DATE: $selectedDay');
