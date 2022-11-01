@@ -37,64 +37,65 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-@override
-Widget build(BuildContext context) {
-  return MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(
-        title: const Text('Plugin example app'),
-      ),
-      body: Column(children: [
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: Card(
-                  margin: const EdgeInsets.all(8),
-                  child: AlhCalendar(
-                    headerLeading: const Icon(Icons.chevron_left),
-                    headerTrailing: const Icon(Icons.chevron_right),
-                    daysOfWeek: dayMap,
-                    enableHorizontalSwipe: true,
-                    enableSixWeeksForEveryMonth: true,
-                    onReachedMinimumDate: () {
-                      log("REACHED MIN");
-                    },
-                    onReachedMaximumDate: () {
-                      log("REACHED MAX");
-                    },
-                    onMonthChanged: (selectedMonth) {
-                      log('MONTH HAS CHANGED $selectedMonth');
-                    },
-                    onDayChanged: (selectedDay) {
-                      log('SELECTED DATE: $selectedDay');
-                    },
-                    dayOfWeekBuilder: (String dayOfWeek, bool isWeekEnd) {
-                      return Center(
-                        child: Text(
-                          dayOfWeek,
-                          style: TextStyle(
-                              color: isWeekEnd
-                                  ? Colors.blueAccent
-                                  : Colors.redAccent),
-                        ),
-                      );
-                    },
-                    headerBuilder: (DateTime date) {
-                      return CalendarHeaderTitle(
-                        displayMonth:
-                            DateFormat('MMMM yyyy', 'en_Us').format(date),
-                      );
-                    },
-                    dayBuilder: (
-                      CalendarDayBuilderModel calendarDayBuilderModel,
-                    ) {
-                      return CalendarDay(
-                        calendarDayBuilderModel: calendarDayBuilderModel,
-                      );
-                    },
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+        ),
+        body: Column(children: [
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Card(
+                    margin: const EdgeInsets.all(8),
+                    child: AlhCalendar(
+                      headerLeading: const Icon(Icons.chevron_left),
+                      headerTrailing: const Icon(Icons.chevron_right),
+                      daysOfWeek: dayMap,
+                      enableHorizontalSwipe: true,
+                      enableSixWeeksForEveryMonth: true,
+                      onReachedMinimumDate: () {
+                        log("REACHED MIN");
+                      },
+                      onReachedMaximumDate: () {
+                        log("REACHED MAX");
+                      },
+                      onMonthChanged: (selectedMonth) {
+                        log('MONTH HAS CHANGED $selectedMonth');
+                      },
+                      onDayChanged: (selectedDay) {
+                        log('SELECTED DATE: $selectedDay');
+                      },
+                      dayOfWeekBuilder: (String dayOfWeek, bool isWeekEnd) {
+                        return Center(
+                          child: Text(
+                            dayOfWeek,
+                            style: TextStyle(
+                                color: isWeekEnd
+                                    ? Colors.blueAccent
+                                    : Colors.redAccent),
+                          ),
+                        );
+                      },
+                      headerBuilder: (DateTime date) {
+                        return CalendarHeaderTitle(
+                          displayMonth:
+                              DateFormat('MMMM yyyy', 'en_Us').format(date),
+                        );
+                      },
+                      dayBuilder: (
+                        CalendarDayBuilderModel calendarDayBuilderModel,
+                      ) {
+                        return CalendarDay(
+                          calendarDayBuilderModel: calendarDayBuilderModel,
+                        );
+                      },
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ),
