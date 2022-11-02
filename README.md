@@ -101,7 +101,7 @@ This is a list of all parameters that can be used for this widget.
 
 | **Parameter**                   | **Description**                                                              |    **Default Value**    |
 |:---------------------------------------------|:----------------------------------------------------------------|:-----------------:|
-| `initialDateTime`               | Defines initial Time, if null than DateTime.now().                           |          **-**          |
+| `initialDateTime`               | Defines initial Time, if null then `DateTime.now()` will be used.                           |          **-**          |
 | `minimumMonthDate`              | If minimum month is reached, user cannot go to previous month.               |          **-**          |
 | `maximumMonthDate`              | If maximum month is reached, user cannot go to next month.                   |          **-**          |
 | `minimumDayDate`                | Sets the minimum day.                                                        |          **-**          |
