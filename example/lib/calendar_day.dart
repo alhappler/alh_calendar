@@ -55,10 +55,6 @@ class CalendarDay extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         );
       }
-      return BoxDecoration(
-        shape: BoxShape.circle,
-        color: Theme.of(context).primaryColor,
-      );
     } else if (calendarDayBuilderModel.isInCurrentMonth) {
       return const BoxDecoration(
         shape: BoxShape.circle,
