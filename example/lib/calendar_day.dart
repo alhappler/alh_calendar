@@ -44,10 +44,17 @@ class CalendarDay extends StatelessWidget {
         color: Colors.red,
       );
     } else if (calendarDayBuilderModel.isWeekend) {
-      return BoxDecoration(
-        shape: BoxShape.circle,
-        color: Theme.of(context).primaryColor,
-      );
+      if (!calendarDayBuilderModel.isInCurrentMonth) {
+        return BoxDecoration(
+          shape: BoxShape.circle,
+          color: Theme.of(context).primaryColor.withOpacity(0.4),
+        );
+      } else {
+        return BoxDecoration(
+          shape: BoxShape.circle,
+          color: Theme.of(context).primaryColor,
+        );
+      }
     } else if (calendarDayBuilderModel.isInCurrentMonth) {
       return const BoxDecoration(
         shape: BoxShape.circle,

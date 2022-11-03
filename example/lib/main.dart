@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
     DayOfWeek.tuesday: 'Tue',
     DayOfWeek.friday: 'Fri',
     DayOfWeek.saturday: 'Sat',
-    DayOfWeek.sunday: 'XXX',
+    DayOfWeek.sunday: 'Sun',
   };
 
   @override
@@ -58,13 +58,13 @@ class _MyAppState extends State<MyApp> {
                       enableHorizontalSwipe: true,
                       enableSixWeeksForEveryMonth: true,
                       onReachedMinimumDate: () {
-                        log("MInimum Date erreicht");
+                        log("REACHED MIN");
                       },
                       onReachedMaximumDate: () {
                         log("REACHED MAX");
                       },
                       onMonthChanged: (selectedMonth) {
-                        log('Month has changed $selectedMonth');
+                        log('MONTH HAS CHANGED $selectedMonth');
                       },
                       onDayChanged: (selectedDay) {
                         log('SELECTED DATE: $selectedDay');
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
                       },
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ),
