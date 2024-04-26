@@ -17,26 +17,26 @@ void main() {
   Future<void> pumpWidget({
     required WidgetTester tester,
     VoidCallback? onTap,
-    bool? isSixthRowAndDisabled,
   }) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: CalendarCell(
-          date: givenDateTime,
-          isInCurrentMonth: true,
-          isSelected: false,
-          isWeekend: false,
-          onTap: onTap,
-          isOutOfRange: false,
-          isSixthRowAndDisabled: isSixthRowAndDisabled ?? false,
-          dayBuilder: dayBuilder,
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CalendarCell(
+            date: givenDateTime,
+            isInCurrentMonth: true,
+            isSelected: false,
+            isWeekend: false,
+            onTap: onTap,
+            isOutOfRange: false,
+            dayBuilder: dayBuilder,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   testWidgets(
-      'GIVEN isSixthRowAndDisabled is false '
+      'GIVEN '
       'WHEN CalendarCell is pumped '
       'THEN onTap should not be null and child has calendarDayBuilderModel with dateTime != null',
       (WidgetTester tester) async {
@@ -48,63 +48,32 @@ void main() {
 
     // then
     final expectedCalendarDayBuilderModel = CalendarDayBuilderModel(
-        dateTime: givenDateTime,
-        isInCurrentMonth: true,
-        isSelected: false,
-        isWeekend: false,
-        isOutOfRange: false);
-
-    expect(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is InkWell &&
-              widget.splashColor == Colors.transparent &&
-              widget.highlightColor == Colors.transparent &&
-              widget.onTap == givenOnTap &&
-              widget.child is _TestWidget,
-        ),
-        findsOneWidget);
-    expect(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is _TestWidget &&
-              widget.calendarDayBuilderModel == expectedCalendarDayBuilderModel,
-        ),
-        findsOneWidget);
-  });
-
-  testWidgets(
-      'GIVEN isSixthRowAndDisabled is true '
-      'WHEN CalendarCell is pumped '
-      'THEN onTap should be null and child has calendarDayBuilderModel with dateTime == null',
-      (WidgetTester tester) async {
-    // given
-    const givenIsSixthRowAndDisabled = true;
-
-    // when
-    await pumpWidget(
-      tester: tester,
-      isSixthRowAndDisabled: givenIsSixthRowAndDisabled,
+      dateTime: givenDateTime,
+      isInCurrentMonth: true,
+      isSelected: false,
+      isWeekend: false,
+      isOutOfRange: false,
     );
 
-    // then
-    const expectedDateTime = null;
-
     expect(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is InkWell &&
-              widget.splashColor == Colors.transparent &&
-              widget.highlightColor == Colors.transparent &&
-              widget.onTap == null &&
-              widget.child is _TestWidget,
-        ),
-        findsOneWidget);
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is InkWell &&
+            widget.splashColor == Colors.transparent &&
+            widget.highlightColor == Colors.transparent &&
+            widget.onTap == givenOnTap &&
+            widget.child is _TestWidget,
+      ),
+      findsOneWidget,
+    );
     expect(
-        find.byWidgetPredicate((widget) =>
+      find.byWidgetPredicate(
+        (widget) =>
             widget is _TestWidget &&
-            widget.calendarDayBuilderModel.dateTime == expectedDateTime),
-        findsOneWidget);
+            widget.calendarDayBuilderModel == expectedCalendarDayBuilderModel,
+      ),
+      findsOneWidget,
+    );
   });
 }
 

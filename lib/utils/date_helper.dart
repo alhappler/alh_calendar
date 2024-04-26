@@ -1,63 +1,75 @@
-import 'package:alh_calendar/models/calendar_week.dart';
-
 /// Collection of methods regarding the calculation of the dates.
 class DateHelper {
   /// Checks if maximum month has been reached.
   ///
-  /// Returns true if the year and month of [currentDateTime]
-  /// is equal or higher then year and month of [maximumDateTime].
+  /// Returns true if the year and month of [currentDate]
+  /// is equal or higher then year and month of [maxSelectableDate].
   static bool isMaximumMonthDateReached({
-    required DateTime maximumDateTime,
-    required DateTime currentDateTime,
+    required DateTime maxSelectableDate,
+    required DateTime currentDate,
   }) {
-    return currentDateTime.year >= maximumDateTime.year &&
-        currentDateTime.month >= maximumDateTime.month;
+    return currentDate.year >= maxSelectableDate.year &&
+        currentDate.month >= maxSelectableDate.month;
   }
 
   /// Checks if minimum month has been reached.
   ///
-  /// Returns true if the year and month of [currentDateTime]
-  /// is equal or lower then year and month of maximumDateTime.
+  /// Returns true if the year and month of [currentDate]
+  /// is equal or lower then year and month of maxSelectableDate.
   static bool isMinimumMonthDateReached({
     required DateTime minimumMonthDate,
-    required DateTime currentDateTime,
+    required DateTime currentDate,
   }) {
-    return currentDateTime.year <= minimumMonthDate.year &&
-        currentDateTime.month <= minimumMonthDate.month;
+    return currentDate.year <= minimumMonthDate.year &&
+        currentDate.month <= minimumMonthDate.month;
   }
 
   /// Checks if a given day is out of Range
   ///
   /// Out of Range means that the day does not lay between the
-  /// [minimumDayDate] and maximumDayData. If maximumDayDate is null
-  /// all days before the minimumDayDate are out of Range, if minimumDayDate
-  /// is null all day beyond maximumDayDate are out of Range. If both are null
+  /// [minSelectableDate] and maximumDayData. If maxSelectableDate is null
+  /// all days before the minSelectableDate are out of Range, if minSelectableDate
+  /// is null all day beyond maxSelectableDate are out of Range. If both are null
   /// there is no Range, so no day can be out of range.
   static bool isDayOutOfRange({
     required DateTime dayDateTime,
-    required DateTime? minimumDayDate,
-    required DateTime? maximumDayDate,
+    required DateTime? minSelectableDate,
+    required DateTime? maxSelectableDate,
   }) {
-    if (minimumDayDate != null && maximumDayDate != null) {
-      return dayDateTime.isBefore(minimumDayDate) ||
-          dayDateTime.isAfter(maximumDayDate);
-    } else if (minimumDayDate != null) {
-      return dayDateTime.isBefore(minimumDayDate);
-    } else if (maximumDayDate != null) {
-      return dayDateTime.isAfter(maximumDayDate);
+    if (minSelectableDate != null && maxSelectableDate != null) {
+      return dayDateTime.isBefore(minSelectableDate) ||
+          dayDateTime.isAfter(maxSelectableDate);
+    } else if (minSelectableDate != null) {
+      return dayDateTime.isBefore(minSelectableDate);
+    } else if (maxSelectableDate != null) {
+      return dayDateTime.isAfter(maxSelectableDate);
     } else {
       return false;
     }
   }
 
-  /// Checks if any day of [CalendarWeek] is in current month using isInCurrentMonth flag
+  /// Compares the date portions (year, month, day) of two [DateTime] objects.
   ///
-  /// Required if the disableSixthRow is true, because if one day of
-  /// the current month is in the sixth week, then the sixth row should NOT
-  /// be disabled.
-  static bool isDayOfCurrentMonthInLastRow({
-    required CalendarWeek calendarWeek,
+  /// Returns `true` if the dates are the same, ignoring time.
+  static bool areDatesEqual({
+    DateTime? date1,
+    DateTime? date2,
   }) {
-    return calendarWeek.days.any((day) => day.isInCurrentMonth);
+    if (date1 == null || date2 == null) {
+      return false;
+    }
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  /// Calculates the difference in months between two dates.
+  static int getMonthDifference({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    final monthsDifference =
+        (endDate.year - startDate.year) * 12 + endDate.month - startDate.month;
+    return monthsDifference.abs();
   }
 }

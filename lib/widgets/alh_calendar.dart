@@ -2,9 +2,10 @@ import 'package:alh_calendar/enums/day_of_week.dart';
 import 'package:alh_calendar/models/calendar_day_builder_model.dart';
 import 'package:alh_calendar/models/calendar_month.dart';
 import 'package:alh_calendar/utils/calendar_table_helper.dart';
-import 'package:alh_calendar/utils/date_helper.dart';
 import 'package:alh_calendar/widgets/calendar_body.dart';
 import 'package:alh_calendar/widgets/calendar_header/calendar_header.dart';
+import 'package:alh_calendar/widgets/calendar_page_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Signature for a function that builds a widget for a given day.
@@ -43,33 +44,44 @@ class AlhCalendar extends StatefulWidget {
   final DayOfWeekBuilder dayOfWeekBuilder;
 
   /// Defines initial Time, if null than DateTime.now()
-  final DateTime? initialDateTime;
+  final DateTime? initialDate;
 
-  /// Defines the minimum month.
+  /// The minimum selectable month for the calendar.
   ///
-  /// If minimum month is reached, user cannot go to previous month.
-  final DateTime? minimumMonthDate;
+  /// If the minimum month is reached, the user cannot go to a previous month.
+  /// It can be null, indicating that there is no minimum selectable month,
+  /// and the user can navigate to any previous month.
+  ///
+  /// If the [minSelectableMonth] is not set, the default value is 10 years in the past.
+  final DateTime? minSelectableMonth;
 
-  /// Defines the maximum month.
+  /// The maximum selectable month for the calendar.
   ///
-  /// If maximum month is reached, user cannot go to next month.
-  final DateTime? maximumMonthDate;
+  /// If the maximum month is reached, the user cannot go to the next month.
+  /// It can be null, indicating that there is no maximum selectable month,
+  /// and the user can navigate to any future month.
+  ///
+  /// If the [maxSelectableMonth] is not set, the default value is 10 years in the future.
+  final DateTime? maxSelectableMonth;
 
-  /// Sets the minimum day.
+  /// Sets the minimum day within the selectable month range.
   ///
-  /// Every day before chosen day is flagged as outside of Range.
-  /// All days in between minimum day and maximum day are called in range. The [minimumMonthDate]
-  /// and [minimumDayDate] have nothing in commom, [minimumMonthDate] sets the lowest month
-  /// the user can navigate to, while [minimumDayDate] sets the first day of the Range.
-  final DateTime? minimumDayDate;
+  /// Every day before the chosen day is flagged as outside of the range.
+  /// All days between the minimum and maximum days are considered in range.
+  /// The selected day must fall within the range defined
+  /// by [minSelectableMonth] and [maxSelectableMonth].
+  /// If [minSelectableDate] is explicitly set but falls outside the allowable month range,
+  /// it will be limited to the [minSelectableMonth] or its default.
+  final DateTime? minSelectableDate;
 
-  /// Sets the maximum day.
+  /// Sets the maximum day within the selectable month range.
   ///
-  /// All days after maximum day are flagged as outside of Range.
-  /// All days in between minimum day and maximum day are called in range.
-  /// The [maximumMonthDate] and [maximumDayDate] have nothing in commom, [maximumMonthDate] sets the last month
-  /// the user can navigate to, while [maximumDayDate] sets the last day of the Range.
-  final DateTime? maximumDayDate;
+  /// All days after the maximum day are flagged as outside of the range.
+  /// The selected day must fall within the range defined
+  /// by [minSelectableMonth] and [maxSelectableMonth].
+  /// If[maxSelectableDate]is explicitly set but falls outside the allowable month range,
+  /// it will be limited to the [maxSelectableMonth] or its default.
+  final DateTime? maxSelectableDate;
 
   /// needs a Map of <DayOfWeek, String> to fill DayOfWeekCalendarCells
   ///
@@ -85,12 +97,6 @@ class AlhCalendar extends StatefulWidget {
   ///   };
   final Map<DayOfWeek, String> daysOfWeek;
 
-  /// Callback once minimum month is reached
-  final VoidCallback? onReachedMinimumDate;
-
-  /// Callback once maximum month is reached
-  final VoidCallback? onReachedMaximumDate;
-
   /// Callback once month is changed
   final ValueChanged<DateTime>? onMonthChanged;
 
@@ -100,11 +106,16 @@ class AlhCalendar extends StatefulWidget {
   /// Flag if horizontal scrolling in calendar is enabled.
   ///
   /// Default value: true
-  final bool? enableHorizontalSwipe;
+  final bool enableHorizontalSwipe;
 
-  /// Sets the padding between headerTitle and both headerIcons
+  /// Sets the padding around header title and icons.
   ///
-  /// Default value: EdgeInsets.all(3.0)
+  /// Default value: EdgeInsets.symmetric(horizontal: 3.0)
+  final EdgeInsets headerPadding;
+
+  /// Sets the padding around both headerIcons.
+  ///
+  /// Default value: EdgeInsets.all(8)
   final EdgeInsets iconPadding;
 
   /// Enables changing the month when a day outside of current month is tapped.
@@ -114,28 +125,36 @@ class AlhCalendar extends StatefulWidget {
 
   /// Forces Table to have 6 Rows, even when month would fit in 5.
   ///
-  /// Helpful if any widget is placed in a column under AlhCalender that should not move up and down when month is changed.
-  /// Default value: true
-  final bool enableSixWeeksForEveryMonth;
-
-  /// Makes sixth Row invisible if there are only days from next month shown in the last row.
+  /// If false the calendar will only show 6 weeks for months that need it.
+  /// The height of the calendar will be calculated for 6 weeks to avoid jumping
+  /// when the month changes from a month with 5 weeks to one with 6.
+  /// If true the calendar will show 6 weeks for every month.
   ///
   /// Default value: true
-  final bool disableSixthRow;
-
-  /// Should show days that are not in current month.
-  ///
-  /// If true days outside of current month are shown. If false the days are shown,
-  /// but still flagged with isInCurrentMonth = false, so
-  /// it can be used depending on the situation.
-  ///
-  /// Default value: true
-  final bool showDaysOutsideCurrentMonth;
+  final bool showSixWeeksForEveryMonth;
 
   /// If true days out of range can't be tapped
   ///
   /// Default value: true
   final bool disableTapOnOutOfRange;
+
+  /// If false the initialDate won´t be selected.
+  ///
+  /// This can be used if the initialDate needs to be passed to the alhCalendar,
+  /// but the date should not be preselected
+  ///
+  /// Default value: true
+  final bool selectInitialDate;
+
+  /// Duration for the page change animation.
+  ///
+  /// Default value: Duration(milliseconds: 400)
+  final Duration pageChangeDuration;
+
+  /// Curve for the page change animation.
+  ///
+  /// Default value: Curves.easeInOut
+  final Curve pageChangeCurve;
 
   const AlhCalendar({
     required this.dayBuilder,
@@ -144,22 +163,22 @@ class AlhCalendar extends StatefulWidget {
     required this.headerTrailing,
     required this.dayOfWeekBuilder,
     required this.daysOfWeek,
-    this.initialDateTime,
-    this.maximumMonthDate,
-    this.minimumMonthDate,
-    this.minimumDayDate,
-    this.maximumDayDate,
-    this.onReachedMinimumDate,
-    this.onReachedMaximumDate,
+    this.initialDate,
+    this.maxSelectableMonth,
+    this.minSelectableMonth,
+    this.minSelectableDate,
+    this.maxSelectableDate,
     this.onMonthChanged,
     this.onDayChanged,
-    this.iconPadding = const EdgeInsets.all(3.0),
+    this.headerPadding = const EdgeInsets.symmetric(horizontal: 3.0),
+    this.iconPadding = const EdgeInsets.all(8),
+    this.pageChangeDuration = const Duration(milliseconds: 400),
+    this.pageChangeCurve = Curves.easeInOut,
     this.enableHorizontalSwipe = true,
-    this.enableSixWeeksForEveryMonth = true,
-    this.showDaysOutsideCurrentMonth = true,
+    this.showSixWeeksForEveryMonth = true,
     this.disableTapOnOutOfRange = true,
-    this.disableSixthRow = false,
     this.enableJumpToOtherMonth = true,
+    this.selectInitialDate = true,
     super.key,
   }) : assert(daysOfWeek.length == 7);
 
@@ -169,68 +188,161 @@ class AlhCalendar extends StatefulWidget {
 
 class _AlhCalendarState extends State<AlhCalendar> {
   late CalendarMonth calendarMonth;
-  late DateTime selectedDateTime;
-  late DateTime currentDateTime;
+  late DateTime currentDate;
+  late DateTime initialDate;
+  late DateTime minSelectableMonth;
+  late DateTime maxSelectableMonth;
+  late PageController _pageController;
+
+  DateTime? selectedDate;
+  double? pageViewHeight;
+
+  final _calendarBodyKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    this.currentDateTime = this.widget.initialDateTime ?? DateTime.now();
-    this.selectedDateTime = this.currentDateTime;
+
+    this.initialDate = this.widget.initialDate ?? DateTime.now();
+
+    this.selectedDate = this.widget.selectInitialDate ? this.initialDate : null;
+
+    this.currentDate = this.initialDate;
     this.calendarMonth = CalendarTableHelper.buildCurrentCalendarMonth(
-      date: DateTime(this.currentDateTime.year, this.currentDateTime.month),
-      forceSixWeekMonth: this.widget.enableSixWeeksForEveryMonth,
+      date: DateTime(this.currentDate.year, this.currentDate.month),
+      forceSixWeekMonth: this.widget.showSixWeeksForEveryMonth,
+    );
+
+    this.maxSelectableMonth = this.widget.maxSelectableMonth ??
+        this.initialDate.add(const Duration(days: 365 * 10));
+    this.minSelectableMonth = this.widget.minSelectableMonth ??
+        this.initialDate.subtract(const Duration(days: 365 * 10));
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      this._setPageViewHeight();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CalenderHeader(
+          onPressedNext: this.isMaxSelectableMonth ? null : this._goToNextMonth,
+          onPressedPrevious:
+              this.isMinSelectableMonth ? null : this._goToPreviousMonth,
+          header: this.widget.headerBuilder(this.currentDate),
+          headerPadding: this.widget.headerPadding,
+          iconPadding: this.widget.iconPadding,
+          iconLeft: this.widget.headerLeading,
+          iconRight: this.widget.headerTrailing,
+        ),
+        Builder(
+          builder: (context) {
+            // If the height of the CalendarBody is not yet determined, build the CalendarBody
+            // to calculate the height because PageView needs a fixed height to work properly.
+            // Once the height is determined, build the CalendarPageView with the calculated height.
+            if (this.pageViewHeight == null) {
+              // Build the initial month with 6 weeks to calculate the height.
+              // This is done to ensure that the height is calculated correctly.
+              // Because if the first month had 5 weeks,
+              // then the height is fixed for months with 5 weeks,
+              // so we calculate the height for the maximum height possible,
+              // which is for 6 weeks.
+              final calenderMonthWithSixWeeks =
+                  CalendarTableHelper.buildCurrentCalendarMonth(
+                date: DateTime(
+                  this.currentDate.year,
+                  this.currentDate.month,
+                ),
+
+                // Force 6 weeks for the initial month to calculate the height.
+                forceSixWeekMonth: true,
+              );
+              return CalendarBody(
+                key: this._calendarBodyKey,
+                onSelectDay: this._handleSelectDay,
+                calendarMonth: calenderMonthWithSixWeeks,
+                dayBuilder: this.widget.dayBuilder,
+                dayOfWeekBuilder: this.widget.dayOfWeekBuilder,
+                daysOfWeek: this.widget.daysOfWeek,
+                selectedDate: this.selectedDate,
+                minSelectableDate: this.widget.minSelectableDate,
+                maxSelectableDate: this.widget.maxSelectableDate,
+                disableTapOnOutOfRange: this.widget.disableTapOnOutOfRange,
+              );
+            } else {
+              return SizedBox(
+                height: this.pageViewHeight,
+                child: CalendarPageView(
+                  initialDate: this.initialDate,
+                  enableHorizontalSwipe: this.widget.enableHorizontalSwipe,
+                  showSixWeeksForEveryMonth:
+                      this.widget.showSixWeeksForEveryMonth,
+                  onSelectDay: this._handleSelectDay,
+                  dayBuilder: this.widget.dayBuilder,
+                  dayOfWeekBuilder: this.widget.dayOfWeekBuilder,
+                  daysOfWeek: this.widget.daysOfWeek,
+                  selectedDate: this.selectedDate,
+                  minSelectableDate: this.widget.minSelectableDate,
+                  maxSelectableDate: this.widget.maxSelectableDate,
+                  maxSelectableMonth: this.maxSelectableMonth,
+                  minSelectableMonth: this.minSelectableMonth,
+                  disableTapOnOutOfRange: this.widget.disableTapOnOutOfRange,
+                  onChangeMonth: this._handleChangeMonth,
+                  onCreatedPageView: (pageController) {
+                    this._pageController = pageController;
+                  },
+                ),
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 
-  /// Handles press on headerTrailing.
-  ///
-  /// Callback after isMaximumMonthDateReached is true and returns without doing anything
-  /// If maximum month is not reached yet, [currentDateTime] and [calendarMonth] gets
-  /// updated with next month. Also Callback after month is changed.
-  void _goToNextMonth() {
-    if (this.widget.maximumMonthDate != null &&
-        DateHelper.isMaximumMonthDateReached(
-            maximumDateTime: this.widget.maximumMonthDate!,
-            currentDateTime: this.currentDateTime)) {
-      this.widget.onReachedMaximumDate?.call();
-      return;
-    }
-
+  void _handleChangeMonth({
+    required int index,
+    required DateTime newMonthDate,
+  }) {
     setState(() {
-      this.currentDateTime =
-          DateTime(this.currentDateTime.year, this.currentDateTime.month + 1);
+      this.currentDate = newMonthDate;
       this.calendarMonth = CalendarTableHelper.buildCurrentCalendarMonth(
-          date: this.currentDateTime,
-          forceSixWeekMonth: this.widget.enableSixWeeksForEveryMonth);
-
-      this.widget.onMonthChanged?.call(this.currentDateTime);
+        date: newMonthDate,
+        forceSixWeekMonth: this.widget.showSixWeeksForEveryMonth,
+      );
+      this.widget.onMonthChanged?.call(newMonthDate);
     });
   }
 
-  /// Handles tap on headerLeading.
-  ///
-  /// Callback if isMinimumMonthDateReached is reached and returns without doing
-  /// anything. IF isMinimumMonthDateReached is false, updates [currentDateTime] and
-  /// [calendarMonth] with previous month. Also Callback after changing the month.
-  void _goToPreviousMonth() {
-    if (this.widget.minimumMonthDate != null &&
-        DateHelper.isMinimumMonthDateReached(
-            minimumMonthDate: this.widget.minimumMonthDate!,
-            currentDateTime: this.currentDateTime)) {
-      this.widget.onReachedMinimumDate?.call();
-      return;
-    }
+  /// Returns a boolean value indicating whether this is the first month in the calendar.
+  bool get isMinSelectableMonth {
+    return this.currentDate.month == this.minSelectableMonth.month &&
+        this.currentDate.year == this.minSelectableMonth.year;
+  }
 
-    setState(() {
-      this.currentDateTime =
-          DateTime(this.currentDateTime.year, this.currentDateTime.month - 1);
-      this.calendarMonth = CalendarTableHelper.buildCurrentCalendarMonth(
-        date: this.currentDateTime,
-        forceSixWeekMonth: this.widget.enableSixWeeksForEveryMonth,
-      );
-      this.widget.onMonthChanged?.call(this.currentDateTime);
-    });
+  /// Returns a boolean value indicating whether the current month is the last month.
+  bool get isMaxSelectableMonth {
+    return this.currentDate.month == this.maxSelectableMonth.month &&
+        this.currentDate.year == this.maxSelectableMonth.year;
+  }
+
+  /// Handles press on headerTrailing.
+  Future<void> _goToNextMonth() async {
+    await this._pageController.nextPage(
+          duration: this.widget.pageChangeDuration,
+          curve: this.widget.pageChangeCurve,
+        );
+  }
+
+  /// Handles tap on headerLeading.
+  Future<void> _goToPreviousMonth() async {
+    await this._pageController.previousPage(
+          duration: this.widget.pageChangeDuration,
+          curve: this.widget.pageChangeCurve,
+        );
   }
 
   /// Handles tap on a day.
@@ -238,71 +350,37 @@ class _AlhCalendarState extends State<AlhCalendar> {
   /// If enableJumpToOtherMonth is true and selected day is outside of
   /// the current month, then the calendar will jump to the month where the
   /// selected day is in.
-  /// Either way [selectedDateTime] gets updated with selectedDate. Also
+  /// Either way [selectedDate] gets updated with selectedDate. Also
   /// Callback after day is changed.
-  void _selectCalendarDay(DateTime date) {
-    if (date != this.selectedDateTime) {
+  Future<void> _handleSelectDay(DateTime date) async {
+    if (date != this.selectedDate) {
       if (this.widget.enableJumpToOtherMonth) {
-        if (date.month == 12 && this.currentDateTime.month == 1) {
-          this._goToPreviousMonth();
-        } else if (date.month == 1 && this.currentDateTime.month == 12) {
-          this._goToPreviousMonth();
-        } else if (date.month > this.currentDateTime.month) {
-          this._goToNextMonth();
-        } else if (date.month < this.currentDateTime.month) {
-          this._goToPreviousMonth();
+        if (date.month == 12 && this.currentDate.month == 1) {
+          await this._goToPreviousMonth();
+        } else if (date.month == 1 && this.currentDate.month == 12) {
+          await this._goToNextMonth();
+        } else if (date.month > this.currentDate.month) {
+          await this._goToNextMonth();
+        } else if (date.month < this.currentDate.month) {
+          await this._goToPreviousMonth();
         }
       }
 
       setState(() {
-        this.selectedDateTime = date;
-        this.widget.onDayChanged?.call(this.selectedDateTime);
+        this.selectedDate = date;
+        this.widget.onDayChanged?.call(date);
       });
     }
   }
 
-  /// Calculates the swiping direction and calls method depending on
-  /// the outcome of calculation.
-  void _onHorizontalDragEnd(DragEndDetails details) {
-    if (details.velocity.pixelsPerSecond.dx < 0) {
-      this._goToNextMonth();
-    } else if (details.velocity.pixelsPerSecond.dx > 0) {
-      this._goToPreviousMonth();
+  void _setPageViewHeight() {
+    final context = this._calendarBodyKey.currentContext;
+    final renderBox = context?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      final height = renderBox.size.height;
+      setState(() {
+        this.pageViewHeight = height;
+      });
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onHorizontalDragEnd: this.widget.enableHorizontalSwipe == true
-          ? this._onHorizontalDragEnd
-          : null,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CalenderHeader(
-            onPressedNext: this._goToNextMonth,
-            onPressedPrevious: this._goToPreviousMonth,
-            header: this.widget.headerBuilder(this.currentDateTime),
-            padding: this.widget.iconPadding,
-            iconLeft: this.widget.headerLeading,
-            iconRight: this.widget.headerTrailing,
-          ),
-          CalendarBody(
-            onSelectDay: this._selectCalendarDay,
-            calendarMonth: this.calendarMonth,
-            dayBuilder: this.widget.dayBuilder,
-            dayOfWeekBuilder: this.widget.dayOfWeekBuilder,
-            daysOfWeek: this.widget.daysOfWeek,
-            selectedDateTime: this.selectedDateTime,
-            minimumDayDate: this.widget.minimumDayDate,
-            maximumDayDate: this.widget.maximumDayDate,
-            disableClickOnOutOfRange: this.widget.disableTapOnOutOfRange,
-            disableSixthRow: this.widget.disableSixthRow,
-          ),
-        ],
-      ),
-    );
   }
 }

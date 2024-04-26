@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CalenderHeader extends StatelessWidget {
-  final VoidCallback onPressedNext;
-  final VoidCallback onPressedPrevious;
+  final VoidCallback? onPressedNext;
+  final VoidCallback? onPressedPrevious;
   final Widget header;
 
   final Widget iconLeft;
   final Widget iconRight;
-  final EdgeInsets padding;
+  final EdgeInsets headerPadding;
+  final EdgeInsets iconPadding;
 
   const CalenderHeader({
     required this.onPressedNext,
@@ -15,29 +16,46 @@ class CalenderHeader extends StatelessWidget {
     required this.header,
     required this.iconLeft,
     required this.iconRight,
-    required this.padding,
+    required this.headerPadding,
+    required this.iconPadding,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
-      padding: this.padding,
+      padding: this.headerPadding,
       child: Row(
         children: [
-          Padding(
-            padding: this.padding,
-            child: GestureDetector(
-              onTap: this.onPressedPrevious,
-              child: this.iconLeft,
+          InkWell(
+            customBorder: const CircleBorder(),
+            onTap: this.onPressedPrevious,
+            child: Padding(
+              padding: iconPadding,
+              child: IconTheme(
+                data: IconThemeData(
+                  color: this.onPressedPrevious == null
+                      ? theme.disabledColor
+                      : null,
+                ),
+                child: this.iconLeft,
+              ),
             ),
           ),
           Expanded(child: Center(child: this.header)),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: this.onPressedNext,
-              child: this.iconRight,
+          InkWell(
+            customBorder: const CircleBorder(),
+            onTap: this.onPressedNext,
+            child: Padding(
+              padding: iconPadding,
+              child: IconTheme(
+                data: IconThemeData(
+                  color:
+                      this.onPressedNext == null ? theme.disabledColor : null,
+                ),
+                child: this.iconRight,
+              ),
             ),
           ),
         ],
