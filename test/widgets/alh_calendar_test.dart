@@ -975,8 +975,10 @@ void main() {
             widget.showSixWeeksForEveryMonth == false &&
             widget.enableHorizontalSwipe == false &&
             widget.initialDate == givenInitialDate &&
-            widget.disableNextMonthFromDate == expectedDisableNextMonthFromDate &&
-            widget.disablePreviousMonthFromDate == expectedDisablePreviousMonthFromDate &&
+            widget.disableNextMonthFromDate ==
+                expectedDisableNextMonthFromDate &&
+            widget.disablePreviousMonthFromDate ==
+                expectedDisablePreviousMonthFromDate &&
             widget.selectedDate == null &&
             widget.dayBuilder == dayBuilder &&
             widget.dayOfWeekBuilder == dayOfWeekBuilder,

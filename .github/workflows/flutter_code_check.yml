@@ -31,7 +31,6 @@ jobs:
 
       - name: Check alh_calendar
         run: |
-          cd alh_pdf_view
           flutter pub get &&
           dart format --output=none --set-exit-if-changed . &&
           flutter analyze &&
