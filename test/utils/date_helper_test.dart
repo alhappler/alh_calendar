@@ -1,23 +1,20 @@
-import 'package:alh_calendar/enums/day_of_week.dart';
-import 'package:alh_calendar/models/calendar_day.dart';
-import 'package:alh_calendar/models/calendar_week.dart';
 import 'package:alh_calendar/utils/date_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('#isMaximumMonthDateReached', () {
     test(
-        'GIVEN currentDateTime = 01.2000 and maximumDateTime = 01.2001 '
+        'GIVEN currentDate = 01.2000 and maxSelectableDate = 01.2001 '
         'WHEN .isMaximumMonthDateReached is called '
         'THEN should return false', () {
       //given
-      final givenCurrentDateTime = DateTime(2000, 01);
-      final givenMaximumDateTime = DateTime(2001, 01);
+      final givenCurrentDate = DateTime(2000, 01);
+      final givenMaxSelectableDate = DateTime(2001, 01);
 
       // when
       final actual = DateHelper.isMaximumMonthDateReached(
-        maximumDateTime: givenMaximumDateTime,
-        currentDateTime: givenCurrentDateTime,
+        maxSelectableDate: givenMaxSelectableDate,
+        currentDate: givenCurrentDate,
       );
 
       // then
@@ -25,17 +22,17 @@ void main() {
     });
 
     test(
-        'GIVEN currentDateTime = 01.2000 and maximumDateTime = 02.2000 '
+        'GIVEN currentDate = 01.2000 and maxSelectableDate = 02.2000 '
         'WHEN .isMaximumMonthDateReached is called '
         'THEN should return false', () {
       //given
-      final givenCurrentDateTime = DateTime(2000, 01);
-      final givenMaximumDateTime = DateTime(2000, 02);
+      final givenCurrentDate = DateTime(2000, 01);
+      final givenMaxSelectableDate = DateTime(2000, 02);
 
       // when
       final actual = DateHelper.isMaximumMonthDateReached(
-        maximumDateTime: givenMaximumDateTime,
-        currentDateTime: givenCurrentDateTime,
+        maxSelectableDate: givenMaxSelectableDate,
+        currentDate: givenCurrentDate,
       );
 
       // then
@@ -43,17 +40,17 @@ void main() {
     });
 
     test(
-        'GIVEN currentDateTime = 01.2000 and maximumDateTime = 01.2000 '
+        'GIVEN currentDate = 01.2000 and maxSelectableDate = 01.2000 '
         'WHEN .isMaximumMonthDateReached is called '
         'THEN should return true', () {
       //given
-      final givenCurrentDateTime = DateTime(2000, 01);
-      final givenMaximumDateTime = DateTime(2000, 01);
+      final givenCurrentDate = DateTime(2000, 01);
+      final givenMaxSelectableDate = DateTime(2000, 01);
 
       // when
       final actual = DateHelper.isMaximumMonthDateReached(
-        maximumDateTime: givenMaximumDateTime,
-        currentDateTime: givenCurrentDateTime,
+        maxSelectableDate: givenMaxSelectableDate,
+        currentDate: givenCurrentDate,
       );
 
       // then
@@ -63,17 +60,17 @@ void main() {
 
   group('#isMinimumMonthDateReached', () {
     test(
-        'GIVEN currentDateTime = 01.2001 and minimumDateTime = 01.2000 '
+        'GIVEN currentDate = 01.2001 and minSelectableDate = 01.2000 '
         'WHEN .isMinimumMonthDateReached is called '
         'THEN should return false', () {
       //given
-      final givenCurrentDateTime = DateTime(2001, 01);
-      final givenMinimumDateTime = DateTime(2000, 01);
+      final givenCurrentDate = DateTime(2001, 01);
+      final givenMinSelectableDate = DateTime(2000, 01);
 
       // when
       final actual = DateHelper.isMinimumMonthDateReached(
-        minimumMonthDate: givenMinimumDateTime,
-        currentDateTime: givenCurrentDateTime,
+        minimumMonthDate: givenMinSelectableDate,
+        currentDate: givenCurrentDate,
       );
 
       // then
@@ -81,17 +78,17 @@ void main() {
     });
 
     test(
-        'GIVEN currentDateTime = 02.2000 and minimumDateTime = 01.2000 '
+        'GIVEN currentDate = 02.2000 and minSelectableDate = 01.2000 '
         'WHEN .isMinimumMonthDateReached is called '
         'THEN should return false', () {
       //given
-      final givenCurrentDateTime = DateTime(2000, 02);
-      final givenMinimumDateTime = DateTime(2000, 01);
+      final givenCurrentDate = DateTime(2000, 02);
+      final givenMinSelectableDate = DateTime(2000, 01);
 
       // when
       final actual = DateHelper.isMinimumMonthDateReached(
-        minimumMonthDate: givenMinimumDateTime,
-        currentDateTime: givenCurrentDateTime,
+        minimumMonthDate: givenMinSelectableDate,
+        currentDate: givenCurrentDate,
       );
 
       // then
@@ -99,17 +96,17 @@ void main() {
     });
 
     test(
-        'GIVEN currentDateTime = 01.2000 and minimumDateTime = 01.2000 '
+        'GIVEN currentDate = 01.2000 and minSelectableDate = 01.2000 '
         'WHEN .isMinimumMonthDateReached is called '
         'THEN should return true', () {
       //given
-      final givenCurrentDateTime = DateTime(2000, 01);
-      final givenMinimumDateTime = DateTime(2000, 01);
+      final givenCurrentDate = DateTime(2000, 01);
+      final givenMinSelectableDate = DateTime(2000, 01);
 
       // when
       final actual = DateHelper.isMinimumMonthDateReached(
-        minimumMonthDate: givenMinimumDateTime,
-        currentDateTime: givenCurrentDateTime,
+        minimumMonthDate: givenMinSelectableDate,
+        currentDate: givenCurrentDate,
       );
 
       // then
@@ -119,19 +116,19 @@ void main() {
 
   group('#isDayOutOfRange', () {
     test(
-        'GIVEN dayDateTime, minimumDayDate and maximumDayDateTime are null '
+        'GIVEN dayDateTime, minSelectableDate and maxSelectableDateTime are null '
         'WHEN .isDayOutOfRange is called '
         'THEN should return false', () {
       // given
       final givenDayDateTime = DateTime(2022, 10, 1);
-      const givenMinimumDayTime = null;
+      const givenMinSelectableDate = null;
       const givenMaximumDayTime = null;
 
       // when
       final actual = DateHelper.isDayOutOfRange(
         dayDateTime: givenDayDateTime,
-        minimumDayDate: givenMinimumDayTime,
-        maximumDayDate: givenMaximumDayTime,
+        minSelectableDate: givenMinSelectableDate,
+        maxSelectableDate: givenMaximumDayTime,
       );
 
       // then
@@ -139,20 +136,20 @@ void main() {
     });
 
     test(
-        'GIVEN dayDateTime, minimumDayDate and maximumDayDateTime are not null '
+        'GIVEN dayDateTime, minSelectableDate and maxSelectableDateTime are not null '
         'and DayDateTime is before minimumDay '
         'WHEN .isDayOutOfRange is called '
         'THEN should return true', () {
       // given
       final givenDayDateTime = DateTime(2022, 10, 1);
-      final givenMinimumDayTime = DateTime(2022, 10, 2);
+      final givenMinSelectableDate = DateTime(2022, 10, 2);
       final givenMaximumDayTime = DateTime(2022, 10, 3);
 
       // when
       final actual = DateHelper.isDayOutOfRange(
         dayDateTime: givenDayDateTime,
-        minimumDayDate: givenMinimumDayTime,
-        maximumDayDate: givenMaximumDayTime,
+        minSelectableDate: givenMinSelectableDate,
+        maxSelectableDate: givenMaximumDayTime,
       );
 
       // then
@@ -160,20 +157,20 @@ void main() {
     });
 
     test(
-        'GIVEN dayDateTime, minimumDayDate and maximumDayDateTime are not null '
-        'and DayDateTime is before maximum- and after minimumDayTime '
+        'GIVEN dayDateTime, minSelectableDate and maxSelectableDateTime are not null '
+        'and DayDateTime is before maximum- and after minSelectableDate '
         'WHEN .isDayOutOfRange is called '
         'THEN should return false', () {
       // given
       final givenDayDateTime = DateTime(2022, 10, 2);
-      final givenMinimumDayTime = DateTime(2022, 10, 1);
+      final givenMinSelectableDate = DateTime(2022, 10, 1);
       final givenMaximumDayTime = DateTime(2022, 10, 3);
 
       // when
       final actual = DateHelper.isDayOutOfRange(
         dayDateTime: givenDayDateTime,
-        minimumDayDate: givenMinimumDayTime,
-        maximumDayDate: givenMaximumDayTime,
+        minSelectableDate: givenMinSelectableDate,
+        maxSelectableDate: givenMaximumDayTime,
       );
 
       //then
@@ -181,20 +178,20 @@ void main() {
     });
 
     test(
-        'GIVEN dayDateTime, minimumDayDate and maximumDayDateTime are not null '
-        'and DayDateTime is after maximumDateTime '
+        'GIVEN dayDateTime, minSelectableDate and maxSelectableDateTime are not null '
+        'and DayDateTime is after maxSelectableDate '
         'WHEN .isDayOutOfRange is called '
         'THEN should return true', () {
       // given
       final givenDayDateTime = DateTime(2022, 10, 3);
-      final givenMinimumDayTime = DateTime(2022, 10, 1);
+      final givenMinSelectableDate = DateTime(2022, 10, 1);
       final givenMaximumDayTime = DateTime(2022, 10, 2);
 
       // when
       final actual = DateHelper.isDayOutOfRange(
         dayDateTime: givenDayDateTime,
-        minimumDayDate: givenMinimumDayTime,
-        maximumDayDate: givenMaximumDayTime,
+        minSelectableDate: givenMinSelectableDate,
+        maxSelectableDate: givenMaximumDayTime,
       );
 
       //then
@@ -202,81 +199,40 @@ void main() {
     });
 
     test(
-        'GIVEN dayDateTime and minimumDayDate are not null while maximumDayDate is null '
-        'and DayDateTime is after minimumDayDate '
-        'WHEN .isDayOutOfRange is called '
-        'THEN should return false', () {
-      // given
-      final givenDayDateTime = DateTime(2022, 10, 2);
-      final givenMinimumDayTime = DateTime(2022, 10, 1);
-      const givenMaximumDayTime = null;
-
-      // when
-      final actual = DateHelper.isDayOutOfRange(
-        dayDateTime: givenDayDateTime,
-        minimumDayDate: givenMinimumDayTime,
-        maximumDayDate: givenMaximumDayTime,
-      );
-
-      //then
-      expect(actual, isFalse);
-    });
-
-    test(
-        'GIVEN dayDateTime and minimumDayDate are not null while maximumDayDate is null '
-        'and DayDateTime is before minimumDayDate '
+        'GIVEN dayDateTime and minSelectableDate are not null while maxSelectableDate is null '
+        'and DayDateTime is before minSelectableDate '
         'WHEN .isDayOutOfRange is called '
         'THEN should return true', () {
       // given
       final givenDayDateTime = DateTime(2022, 10, 1);
-      final givenMinimumDayTime = DateTime(2022, 10, 2);
+      final givenMinSelectableDate = DateTime(2022, 10, 2);
       const givenMaximumDayTime = null;
 
       // when
       final actual = DateHelper.isDayOutOfRange(
         dayDateTime: givenDayDateTime,
-        minimumDayDate: givenMinimumDayTime,
-        maximumDayDate: givenMaximumDayTime,
+        minSelectableDate: givenMinSelectableDate,
+        maxSelectableDate: givenMaximumDayTime,
       );
 
       expect(actual, isTrue);
     });
 
     test(
-        'GIVEN dayDateTime and maximumDayDate are not null while minimumDayDate is null '
-        'and DayDateTime is before maximumDayDate'
-        'WHEN .isDayOutOfRange is called '
-        'THEN should return false', () {
-      // given
-      final givenDayDateTime = DateTime(2022, 10, 1);
-      const givenMinimumDayTime = null;
-      final givenMaximumDayTime = DateTime(2022, 10, 2);
-
-      // when
-      final actual = DateHelper.isDayOutOfRange(
-        dayDateTime: givenDayDateTime,
-        minimumDayDate: givenMinimumDayTime,
-        maximumDayDate: givenMaximumDayTime,
-      );
-
-      expect(actual, isFalse);
-    });
-
-    test(
-        'GIVEN dayDateTime and maximumDayDate are not null while minimumDayDate is null '
-        'and DayDateTime is after maximumDayDate'
+        'GIVEN dayDateTime and maxSelectableDate are not null while minSelectableDate is null '
+        'and DayDateTime is after maxSelectableDate'
         'WHEN .isDayOutOfRange is called '
         'THEN should return true', () {
       // given
       final givenDayDateTime = DateTime(2022, 10, 2);
-      const givenMinimumDayTime = null;
+      const givenMinSelectableDate = null;
       final givenMaximumDayTime = DateTime(2022, 10, 1);
 
       // when
       final actual = DateHelper.isDayOutOfRange(
         dayDateTime: givenDayDateTime,
-        minimumDayDate: givenMinimumDayTime,
-        maximumDayDate: givenMaximumDayTime,
+        minSelectableDate: givenMinSelectableDate,
+        maxSelectableDate: givenMaximumDayTime,
       );
 
       // then
@@ -284,93 +240,119 @@ void main() {
     });
   });
 
-  group('#isDayOfCurrentMonthInLastRow', () {
+  group('#areDatesEqual', () {
     test(
-        'GIVEN calendarWeek with day from current month '
-        'WHEN .isDayOfCurrentMonthInLastRow is called '
+        'GIVEN two DateTime objects representing the same date '
+        'WHEN areDatesEqual is called '
         'THEN should return true', () {
       // given
-      final givenCalendarWeek = CalendarWeek(days: [
-        CalendarDay(
-            date: DateTime(2022, 07, 29),
-            dayOfWeek: DayOfWeek.monday,
-            isInCurrentMonth: true),
-        CalendarDay(
-            date: DateTime(2022, 07, 30),
-            dayOfWeek: DayOfWeek.tuesday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 07, 31),
-            dayOfWeek: DayOfWeek.wednesday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 08, 1),
-            dayOfWeek: DayOfWeek.thursday,
-            isInCurrentMonth: true),
-        CalendarDay(
-            date: DateTime(2022, 08, 2),
-            dayOfWeek: DayOfWeek.friday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 08, 3),
-            dayOfWeek: DayOfWeek.saturday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 08, 4),
-            dayOfWeek: DayOfWeek.sunday,
-            isInCurrentMonth: false),
-      ]);
+      final dateTime1 = DateTime(2024, 4, 3);
+      final dateTime2 = DateTime(2024, 4, 3);
 
       // when
-      final actual = DateHelper.isDayOfCurrentMonthInLastRow(
-          calendarWeek: givenCalendarWeek);
+      final result =
+          DateHelper.areDatesEqual(date1: dateTime1, date2: dateTime2);
 
       // then
-      expect(actual, isTrue);
+      expect(result, isTrue);
     });
 
     test(
-        'GIVEN calendarWeek with no day from current month '
-        'WHEN .isDayOfCurrentMonthInLastRow is called '
+        'GIVEN two DateTime objects representing different dates '
+        'WHEN areDatesEqual is called '
         'THEN should return false', () {
       // given
-      final givenCalendarWeek = CalendarWeek(days: [
-        CalendarDay(
-            date: DateTime(2022, 07, 29),
-            dayOfWeek: DayOfWeek.monday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 07, 30),
-            dayOfWeek: DayOfWeek.tuesday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 07, 31),
-            dayOfWeek: DayOfWeek.wednesday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 08, 1),
-            dayOfWeek: DayOfWeek.thursday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 08, 2),
-            dayOfWeek: DayOfWeek.friday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 08, 3),
-            dayOfWeek: DayOfWeek.saturday,
-            isInCurrentMonth: false),
-        CalendarDay(
-            date: DateTime(2022, 08, 4),
-            dayOfWeek: DayOfWeek.sunday,
-            isInCurrentMonth: false),
-      ]);
+      final dateTime1 = DateTime(2024, 4, 3);
+      final dateTime2 = DateTime(2024, 5, 3);
 
       // when
-      final actual = DateHelper.isDayOfCurrentMonthInLastRow(
-          calendarWeek: givenCalendarWeek);
+      final result =
+          DateHelper.areDatesEqual(date1: dateTime1, date2: dateTime2);
 
       // then
-      expect(actual, isFalse);
+      expect(result, isFalse);
+    });
+
+    test(
+        'GIVEN two DateTime objects where only time parts are different '
+        'WHEN areDatesEqual is called '
+        'THEN should return true', () {
+      // given
+      final dateTime1 = DateTime(2024, 4, 3, 10, 30);
+      final dateTime2 = DateTime(2024, 4, 3, 20, 45);
+
+      // when
+      final result =
+          DateHelper.areDatesEqual(date1: dateTime1, date2: dateTime2);
+
+      // then
+      expect(result, isTrue);
+    });
+
+    test(
+        'GIVEN one DateTime objects is null '
+        'WHEN areDatesEqual is called '
+        'THEN should return false', () {
+      // given
+      const dateTime1 = null;
+      final dateTime2 = DateTime(2024, 4, 3);
+
+      // when
+      final result =
+          DateHelper.areDatesEqual(date1: dateTime1, date2: dateTime2);
+
+      // then
+      expect(result, isFalse);
+    });
+  });
+
+  group('#getMonthDifference', () {
+    test(
+        'GIVEN startDate before endDate '
+        'WHEN getMonthDifference is called '
+        'THEN should return positive difference in months', () {
+      // given
+      final startDate = DateTime(2020, 1);
+      final endDate = DateTime(2020, 4);
+
+      // when
+      final result =
+          DateHelper.getMonthDifference(startDate: startDate, endDate: endDate);
+
+      // then
+      expect(result, 3); // Difference of 3 months
+    });
+
+    test(
+        'GIVEN startDate after endDate '
+        'WHEN getMonthDifference is called '
+        'THEN should return positive difference in months', () {
+      // given
+      final startDate = DateTime(2020, 5);
+      final endDate = DateTime(2020, 2);
+
+      // when
+      final result =
+          DateHelper.getMonthDifference(startDate: startDate, endDate: endDate);
+
+      // then
+      expect(result, 3); // Difference of -3 months
+    });
+
+    test(
+        'GIVEN startDate and endDate with several years and months apart '
+        'WHEN getMonthDifference is called '
+        'THEN should return correct difference in months', () {
+      // given
+      final startDate = DateTime(2018, 5);
+      final endDate = DateTime(2020, 5);
+
+      // when
+      final result =
+          DateHelper.getMonthDifference(startDate: startDate, endDate: endDate);
+
+      // then
+      expect(result, 24);
     });
   });
 }

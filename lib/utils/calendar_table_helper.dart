@@ -31,8 +31,10 @@ class CalendarTableHelper {
   }
 
   // returns chunks of all given days as calendarWeeks
-  static List<CalendarWeek> _getCalendarWeeks(
-      {required DateTime date, required bool forceSixWeekMonth}) {
+  static List<CalendarWeek> _getCalendarWeeks({
+    required DateTime date,
+    required bool forceSixWeekMonth,
+  }) {
     final calendarWeeks = <CalendarWeek>[];
     // get all days in current month
     final daysInCurrentMonth = _getDaysInMonth(date, true);
@@ -48,7 +50,7 @@ class CalendarTableHelper {
     // weekday on which the month starts
     final firstWeekDayOfMonth = _getFirstWeekDayOfMonth(date);
 
-    // fills up the days in front of currtenmonth days with days from previous month
+    // fills up the days in front of current month days with days from previous month
     final daysOfPreviousMonth = _fillDaysInMonthBeginning(
       weekday: firstWeekDayOfMonth,
       lastMonthDays: daysInPreviousMonth,
@@ -77,7 +79,7 @@ class CalendarTableHelper {
     return calendarWeeks;
   }
 
-  /// Returns on which day of the week the month starts
+  /// Returns on which day of the week the month starts.
   ///
   /// for example: monday or saturday
   static int _getFirstWeekDayOfMonth(DateTime month) {
@@ -122,11 +124,13 @@ class CalendarTableHelper {
     for (int i = 0; i < totalDays; i++) {
       final day = DateTime(date.year, date.month, i + 1);
 
-      dateTimeDayList.add(CalendarDay(
-        date: day,
-        isInCurrentMonth: isCurrentMonth,
-        dayOfWeek: DayOfWeek.values[day.weekday - 1],
-      ));
+      dateTimeDayList.add(
+        CalendarDay(
+          date: day,
+          isInCurrentMonth: isCurrentMonth,
+          dayOfWeek: DayOfWeek.values[day.weekday - 1],
+        ),
+      );
     }
 
     return dateTimeDayList;
@@ -138,64 +142,62 @@ class CalendarTableHelper {
   /// each row gets filled with the calendarDays of the calendarWeeks.
   static List<TableRow> buildCalendarTableRow({
     required CalendarMonth calendarMonth,
-    required bool disableSixthRow,
-    required DateTime selectedDateTime,
     required DayBuilder dayBuilder,
     required ValueChanged<DateTime> onSelectDay,
-    required bool disableClickOnOutOfRange,
-    DateTime? minimumDayDate,
-    DateTime? maximumDayDate,
+    required bool disableTapOnOutOfRange,
+    DateTime? minSelectableDate,
+    DateTime? maxSelectableDate,
+    DateTime? selectedDate,
   }) {
     return calendarMonth.weeks
-        .map((week) => TableRow(
+        .map(
+          (week) => TableRow(
             children: week.days
-                .map((day) => _buildCalendarCell(
-                    calendarMonth: calendarMonth,
+                .map(
+                  (day) => _buildCalendarCell(
                     calendarDay: day,
                     calendarWeek: week,
-                    disableSixthRow: disableSixthRow,
-                    selectedDateTime: selectedDateTime,
+                    selectedDate: selectedDate,
                     dayBuilder: dayBuilder,
                     onSelectDay: onSelectDay,
-                    disableClickOnOutOfRange: disableSixthRow,
-                    minimumDayDate: minimumDayDate,
-                    maximumDayDate: maximumDayDate))
-                .toList()))
+                    disableTapOnOutOfRange: disableTapOnOutOfRange,
+                    minSelectableDate: minSelectableDate,
+                    maxSelectableDate: maxSelectableDate,
+                  ),
+                )
+                .toList(),
+          ),
+        )
         .toList();
   }
 
   static CalendarCell _buildCalendarCell({
-    required CalendarMonth calendarMonth,
     required CalendarDay calendarDay,
     required CalendarWeek calendarWeek,
-    required bool disableSixthRow,
-    required DateTime selectedDateTime,
+    required DateTime? selectedDate,
     required DayBuilder dayBuilder,
     required ValueChanged<DateTime> onSelectDay,
-    required bool disableClickOnOutOfRange,
-    DateTime? minimumDayDate,
-    DateTime? maximumDayDate,
+    required bool disableTapOnOutOfRange,
+    DateTime? minSelectableDate,
+    DateTime? maxSelectableDate,
   }) {
-    late bool disableLastRow = false;
-    // if disableSixthRow == true the last row has to be disabled
-    if (calendarWeek == calendarMonth.weeks.last && disableSixthRow) {
-      disableLastRow =
-          !DateHelper.isDayOfCurrentMonthInLastRow(calendarWeek: calendarWeek);
-    }
     // calculate if day is out of range
     final isOutOfRange = DateHelper.isDayOutOfRange(
-        dayDateTime: calendarDay.date,
-        minimumDayDate: minimumDayDate,
-        maximumDayDate: maximumDayDate);
+      dayDateTime: calendarDay.date,
+      minSelectableDate: minSelectableDate,
+      maxSelectableDate: maxSelectableDate,
+    );
     return CalendarCell(
-      isSixthRowAndDisabled: disableLastRow,
       date: calendarDay.date,
       isInCurrentMonth: calendarDay.isInCurrentMonth,
-      isSelected: selectedDateTime == calendarDay.date,
+      isSelected: DateHelper.areDatesEqual(
+        date1: selectedDate,
+        date2: calendarDay.date,
+      ),
       isWeekend: calendarDay.dayOfWeek.isWeekend,
       isOutOfRange: isOutOfRange,
       dayBuilder: dayBuilder,
-      onTap: !disableClickOnOutOfRange || !isOutOfRange
+      onTap: !disableTapOnOutOfRange || !isOutOfRange
           ? () => onSelectDay(calendarDay.date)
           : null,
     );

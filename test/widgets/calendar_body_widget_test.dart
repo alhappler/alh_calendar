@@ -52,25 +52,28 @@ void main() {
   Future<void> pumpWidget({
     required WidgetTester tester,
     required ValueChanged<DateTime> onSelectDay,
-    DateTime? minimumDatetime,
-    DateTime? maximumDateTime,
+    DateTime? minSelectableDate,
+    DateTime? maxSelectableDate,
+    DateTime? selectedDate,
+    bool disableTapOnOutOfRange = true,
   }) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: CalendarBody(
-          calendarMonth: givenCalendarMonth,
-          dayBuilder: dayBuilder,
-          dayOfWeekBuilder: dayOfWeekBuilder,
-          onSelectDay: onSelectDay,
-          daysOfWeek: givenDayOfWeekMap,
-          selectedDateTime: DateTime(2022, 9, 12),
-          disableClickOnOutOfRange: true,
-          minimumDayDate: minimumDatetime,
-          maximumDayDate: maximumDateTime,
-          disableSixthRow: false,
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CalendarBody(
+            calendarMonth: givenCalendarMonth,
+            dayBuilder: dayBuilder,
+            dayOfWeekBuilder: dayOfWeekBuilder,
+            onSelectDay: onSelectDay,
+            daysOfWeek: givenDayOfWeekMap,
+            selectedDate: selectedDate,
+            disableTapOnOutOfRange: disableTapOnOutOfRange,
+            minSelectableDate: minSelectableDate,
+            maxSelectableDate: maxSelectableDate,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   testWidgets(
@@ -91,116 +94,155 @@ void main() {
       expectedCalendarCellCount += week.days.length;
     }
 
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Padding &&
+            widget.padding == const EdgeInsets.symmetric(horizontal: 4),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Card && widget.child is Table && widget.elevation == 0,
+      ),
+      findsOneWidget,
+    );
     expect(find.byType(Table), findsOneWidget);
+    givenDayOfWeekMap.forEach((_, dayName) {
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is TableCell &&
+              widget.child is Center &&
+              (widget.child as Center).child is Text &&
+              ((widget.child as Center).child! as Text).data == dayName,
+        ),
+        findsOneWidget,
+      );
+    });
     expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TableCell &&
-            widget.child is Center &&
-            (widget.child as Center).child is Text &&
-            ((widget.child as Center).child! as Text).data ==
-                givenDayOfWeekMap[DayOfWeek.monday]),
-        findsOneWidget);
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is CalendarCell &&
+            widget.isOutOfRange == false &&
+            widget.isSelected == false &&
+            widget.dayBuilder == dayBuilder &&
+            widget.onTap != null,
+      ),
+      findsNWidgets(expectedCalendarCellCount),
+    );
     expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TableCell &&
-            widget.child is Center &&
-            (widget.child as Center).child is Text &&
-            ((widget.child as Center).child! as Text).data ==
-                givenDayOfWeekMap[DayOfWeek.tuesday]),
-        findsOneWidget);
-    expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TableCell &&
-            widget.child is Center &&
-            (widget.child as Center).child is Text &&
-            ((widget.child as Center).child! as Text).data ==
-                givenDayOfWeekMap[DayOfWeek.wednesday]),
-        findsOneWidget);
-    expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TableCell &&
-            widget.child is Center &&
-            (widget.child as Center).child is Text &&
-            ((widget.child as Center).child! as Text).data ==
-                givenDayOfWeekMap[DayOfWeek.thursday]),
-        findsOneWidget);
-    expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TableCell &&
-            widget.child is Center &&
-            (widget.child as Center).child is Text &&
-            ((widget.child as Center).child! as Text).data ==
-                givenDayOfWeekMap[DayOfWeek.friday]),
-        findsOneWidget);
-    expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TableCell &&
-            widget.child is Center &&
-            (widget.child as Center).child is Text &&
-            ((widget.child as Center).child! as Text).data ==
-                givenDayOfWeekMap[DayOfWeek.saturday]),
-        findsOneWidget);
-    expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TableCell &&
-            widget.child is Center &&
-            (widget.child as Center).child is Text &&
-            ((widget.child as Center).child! as Text).data ==
-                givenDayOfWeekMap[DayOfWeek.sunday]),
-        findsOneWidget);
-    expect(find.byType(CalendarCell), findsNWidgets(expectedCalendarCellCount));
+      find.byWidgetPredicate(
+        (widget) => widget is CalendarCell && widget.isSelected == true,
+      ),
+      findsNothing,
+    );
   });
 
   testWidgets(
-      'GIVEN minimumDateTime and maximumDateTime '
+      'GIVEN minSelectableDate, maxSelectableDate and selectedDate '
       'WHEN CalendarBody is pumped '
       'THEN should show CalendarCell with isOutOfRange like expected',
       (WidgetTester tester) async {
     // given
-    final givenMinimumDateTime = DateTime(2022, 9, 5);
-    final givenMaximumDateTime = DateTime(2022, 9, 8);
+    final givenMinSelectableDate = DateTime(2022, 9, 5);
+    final givenMaxSelectableDate = DateTime(2022, 9, 8);
+    final givenSelectedDate = DateTime(2022, 9, 6);
 
     // when
     await pumpWidget(
       tester: tester,
       onSelectDay: (date) {},
-      minimumDatetime: givenMinimumDateTime,
-      maximumDateTime: givenMaximumDateTime,
+      minSelectableDate: givenMinSelectableDate,
+      maxSelectableDate: givenMaxSelectableDate,
+      selectedDate: givenSelectedDate,
     );
 
     // then
     expect(
-        find.byWidgetPredicate((widget) =>
+      find.byWidgetPredicate(
+        (widget) =>
             widget is CalendarCell &&
             widget.date == DateTime(2022, 9, 4) &&
-            widget.isOutOfRange == true),
-        findsOneWidget);
+            widget.isOutOfRange == true &&
+            widget.onTap == null,
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is CalendarCell &&
+            widget.isSelected == true &&
+            widget.isOutOfRange == false &&
+            widget.onTap != null &&
+            widget.date == givenSelectedDate,
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets(
-      'GIVEN minimumDateTime and maximumDateTime '
+      'GIVEN minSelectableDate and maxSelectableDate and disableTapOnOutOfRange = false '
+      'WHEN CalendarBody is pumped '
+      'THEN should show CalendarCell with isOutOfRange like expected',
+      (WidgetTester tester) async {
+    // given
+    final givenMinSelectableDate = DateTime(2022, 9, 5);
+    final givenMaxSelectableDate = DateTime(2022, 9, 8);
+
+    // when
+    await pumpWidget(
+      tester: tester,
+      onSelectDay: (date) {},
+      minSelectableDate: givenMinSelectableDate,
+      maxSelectableDate: givenMaxSelectableDate,
+      disableTapOnOutOfRange: false,
+    );
+
+    // then
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is CalendarCell &&
+            widget.date == DateTime(2022, 9, 4) &&
+            widget.isOutOfRange == true &&
+            widget.onTap != null,
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+      'GIVEN minSelectableDate and maxSelectableDate '
       'WHEN CalendarBody is pumped and CalendarCell out of range is tapped '
       'THEN counter should be 1', (WidgetTester tester) async {
     // given
     int counter = 0;
 
-    final givenMinimumDateTime = DateTime(2022, 10, 5);
-    final givenMaximumDateTime = DateTime(2022, 10, 8);
+    final givenMinSelectableDate = DateTime(2022, 10, 5);
+    final givenMaxSelectableDate = DateTime(2022, 10, 8);
 
     await pumpWidget(
       tester: tester,
       onSelectDay: (date) {
         counter++;
       },
-      minimumDatetime: givenMinimumDateTime,
-      maximumDateTime: givenMaximumDateTime,
+      minSelectableDate: givenMinSelectableDate,
+      maxSelectableDate: givenMaxSelectableDate,
     );
 
     // when
-    await tester.tap(find.byWidgetPredicate((widget) =>
-        widget is CalendarCell &&
-        widget.date == DateTime(2022, 10, 6) &&
-        widget.isOutOfRange == false));
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is CalendarCell &&
+            widget.date == DateTime(2022, 10, 6) &&
+            widget.isOutOfRange == false,
+      ),
+    );
 
     // then
     expect(counter, 1);

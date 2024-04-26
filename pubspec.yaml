@@ -1,7 +1,7 @@
 name: alh_calendar
 description: A package for creating a custom calendar-widget.
   Builder-methods make it possible to design the calendar according to the given situation.
-version: 0.0.1
+version: 1.0.0
 repository: https://github.com/alhappler/alh_calendar
 
 environment:
@@ -16,6 +16,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  intl: ^0.19.0
 
 flutter:
 

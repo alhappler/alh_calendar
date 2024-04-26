@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.info - utils/lib/utils/date_helper.dart</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">utils/lib/utils</a> - date_helper.dart<span style="font-size: 80%;"> (source / <a href="date_helper.dart.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntry">18</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2024-04-26 09:41:03</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /// Collection of methods regarding the calculation of the dates.</span>
+<span id="L2"><span class="lineNum">       2</span>              : class DateHelper {</span>
+<span id="L3"><span class="lineNum">       3</span>              :   /// Checks if maximum month has been reached.</span>
+<span id="L4"><span class="lineNum">       4</span>              :   ///</span>
+<span id="L5"><span class="lineNum">       5</span>              :   /// Returns true if the year and month of [currentDate]</span>
+<span id="L6"><span class="lineNum">       6</span>              :   /// is equal or higher then year and month of [maxSelectableDate].</span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC tlaBgGNC">           1 :   static bool isMaximumMonthDateReached({</span></span>
+<span id="L8"><span class="lineNum">       8</span>              :     required DateTime maxSelectableDate,</span>
+<span id="L9"><span class="lineNum">       9</span>              :     required DateTime currentDate,</span>
+<span id="L10"><span class="lineNum">      10</span>              :   }) {</span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           3 :     return currentDate.year &gt;= maxSelectableDate.year &amp;&amp;</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">           3 :         currentDate.month &gt;= maxSelectableDate.month;</span></span>
+<span id="L13"><span class="lineNum">      13</span>              :   }</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              :   /// Checks if minimum month has been reached.</span>
+<span id="L16"><span class="lineNum">      16</span>              :   ///</span>
+<span id="L17"><span class="lineNum">      17</span>              :   /// Returns true if the year and month of [currentDate]</span>
+<span id="L18"><span class="lineNum">      18</span>              :   /// is equal or lower then year and month of maxSelectableDate.</span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">           1 :   static bool isMinimumMonthDateReached({</span></span>
+<span id="L20"><span class="lineNum">      20</span>              :     required DateTime minimumMonthDate,</span>
+<span id="L21"><span class="lineNum">      21</span>              :     required DateTime currentDate,</span>
+<span id="L22"><span class="lineNum">      22</span>              :   }) {</span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">           3 :     return currentDate.year &lt;= minimumMonthDate.year &amp;&amp;</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           3 :         currentDate.month &lt;= minimumMonthDate.month;</span></span>
+<span id="L25"><span class="lineNum">      25</span>              :   }</span>
+<span id="L26"><span class="lineNum">      26</span>              : </span>
+<span id="L27"><span class="lineNum">      27</span>              :   /// Checks if a given day is out of Range</span>
+<span id="L28"><span class="lineNum">      28</span>              :   ///</span>
+<span id="L29"><span class="lineNum">      29</span>              :   /// Out of Range means that the day does not lay between the</span>
+<span id="L30"><span class="lineNum">      30</span>              :   /// [minSelectableDate] and maximumDayData. If maxSelectableDate is null</span>
+<span id="L31"><span class="lineNum">      31</span>              :   /// all days before the minSelectableDate are out of Range, if minSelectableDate</span>
+<span id="L32"><span class="lineNum">      32</span>              :   /// is null all day beyond maxSelectableDate are out of Range. If both are null</span>
+<span id="L33"><span class="lineNum">      33</span>              :   /// there is no Range, so no day can be out of range.</span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           5 :   static bool isDayOutOfRange({</span></span>
+<span id="L35"><span class="lineNum">      35</span>              :     required DateTime dayDateTime,</span>
+<span id="L36"><span class="lineNum">      36</span>              :     required DateTime? minSelectableDate,</span>
+<span id="L37"><span class="lineNum">      37</span>              :     required DateTime? maxSelectableDate,</span>
+<span id="L38"><span class="lineNum">      38</span>              :   }) {</span>
+<span id="L39"><span class="lineNum">      39</span>              :     if (minSelectableDate != null &amp;&amp; maxSelectableDate != null) {</span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">           5 :       return dayDateTime.isBefore(minSelectableDate) ||</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           5 :           dayDateTime.isAfter(maxSelectableDate);</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :     } else if (minSelectableDate != null) {</span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">           1 :       return dayDateTime.isBefore(minSelectableDate);</span></span>
+<span id="L44"><span class="lineNum">      44</span>              :     } else if (maxSelectableDate != null) {</span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           1 :       return dayDateTime.isAfter(maxSelectableDate);</span></span>
+<span id="L46"><span class="lineNum">      46</span>              :     } else {</span>
+<span id="L47"><span class="lineNum">      47</span>              :       return false;</span>
+<span id="L48"><span class="lineNum">      48</span>              :     }</span>
+<span id="L49"><span class="lineNum">      49</span>              :   }</span>
+<span id="L50"><span class="lineNum">      50</span>              : </span>
+<span id="L51"><span class="lineNum">      51</span>              :   /// Compares the date portions (year, month, day) of two [DateTime] objects.</span>
+<span id="L52"><span class="lineNum">      52</span>              :   ///</span>
+<span id="L53"><span class="lineNum">      53</span>              :   /// Returns `true` if the dates are the same, ignoring time.</span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">           5 :   static bool areDatesEqual({</span></span>
+<span id="L55"><span class="lineNum">      55</span>              :     DateTime? date1,</span>
+<span id="L56"><span class="lineNum">      56</span>              :     DateTime? date2,</span>
+<span id="L57"><span class="lineNum">      57</span>              :   }) {</span>
+<span id="L58"><span class="lineNum">      58</span>              :     if (date1 == null || date2 == null) {</span>
+<span id="L59"><span class="lineNum">      59</span>              :       return false;</span>
+<span id="L60"><span class="lineNum">      60</span>              :     }</span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          12 :     return date1.year == date2.year &amp;&amp;</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">          12 :         date1.month == date2.month &amp;&amp;</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          12 :         date1.day == date2.day;</span></span>
+<span id="L64"><span class="lineNum">      64</span>              :   }</span>
+<span id="L65"><span class="lineNum">      65</span>              : </span>
+<span id="L66"><span class="lineNum">      66</span>              :   /// Calculates the difference in months between two dates.</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           3 :   static int getMonthDifference({</span></span>
+<span id="L68"><span class="lineNum">      68</span>              :     required DateTime startDate,</span>
+<span id="L69"><span class="lineNum">      69</span>              :     required DateTime endDate,</span>
+<span id="L70"><span class="lineNum">      70</span>              :   }) {</span>
+<span id="L71"><span class="lineNum">      71</span>              :     final monthsDifference =</span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          24 :         (endDate.year - startDate.year) * 12 + endDate.month - startDate.month;</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">           3 :     return monthsDifference.abs();</span></span>
+<span id="L74"><span class="lineNum">      74</span>              :   }</span>
+<span id="L75"><span class="lineNum">      75</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

@@ -2,7 +2,7 @@ import 'package:alh_calendar/enums/day_of_week.dart';
 import 'package:alh_calendar/models/calendar_month.dart';
 import 'package:alh_calendar/utils/calendar_table_helper.dart';
 import 'package:alh_calendar/widgets/alh_calendar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 /// Represents the whole TableView of the calendar.
 class CalendarBody extends StatelessWidget {
@@ -33,22 +33,16 @@ class CalendarBody extends StatelessWidget {
   final Map<DayOfWeek, String> daysOfWeek;
 
   /// The date which is selected at the moment.
-  final DateTime selectedDateTime;
+  final DateTime? selectedDate;
 
   /// If true the days outside of the Range can´t be tapped.
-  final bool disableClickOnOutOfRange;
+  final bool disableTapOnOutOfRange;
 
-  /// Disables last Row if there are only days from next month shown in the last row.
-  ///
-  /// If true the last Row will be invisible and not tappable,
-  /// if there are only days from next month shown in the last row.
-  final bool disableSixthRow;
+  /// All days before chosen minSelectableDate are flagged as outOfRange.
+  final DateTime? minSelectableDate;
 
-  /// All days before chosen minimumDayDate are flagged as outOfRange.
-  final DateTime? minimumDayDate;
-
-  /// All days after chosen maximumDayDate are flagged as outOfRange.
-  final DateTime? maximumDayDate;
+  /// All days after chosen maxSelectableDate are flagged as outOfRange.
+  final DateTime? maxSelectableDate;
 
   const CalendarBody({
     required this.calendarMonth,
@@ -56,42 +50,46 @@ class CalendarBody extends StatelessWidget {
     required this.dayOfWeekBuilder,
     required this.onSelectDay,
     required this.daysOfWeek,
-    required this.selectedDateTime,
-    required this.disableClickOnOutOfRange,
-    required this.disableSixthRow,
-    this.minimumDayDate,
-    this.maximumDayDate,
+    required this.disableTapOnOutOfRange,
+    required this.selectedDate,
+    required this.minSelectableDate,
+    required this.maxSelectableDate,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-      children: [
-        TableRow(
-          children: List.generate(
-            DateTime.daysPerWeek,
-            (day) {
-              final dayValue = this.daysOfWeek.entries.elementAt(day);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Card(
+        elevation: 0,
+        child: Table(
+          children: [
+            TableRow(
+              children: List.generate(
+                DateTime.daysPerWeek,
+                (day) {
+                  final dayValue = this.daysOfWeek.entries.elementAt(day);
 
-              return this.dayOfWeekBuilder(
-                dayValue.value,
-                dayValue.key.isWeekend,
-              );
-            },
-          ),
+                  return this.dayOfWeekBuilder(
+                    dayValue.value,
+                    dayValue.key.isWeekend,
+                  );
+                },
+              ),
+            ),
+            ...CalendarTableHelper.buildCalendarTableRow(
+              calendarMonth: this.calendarMonth,
+              selectedDate: this.selectedDate,
+              dayBuilder: this.dayBuilder,
+              onSelectDay: this.onSelectDay,
+              disableTapOnOutOfRange: this.disableTapOnOutOfRange,
+              minSelectableDate: this.minSelectableDate,
+              maxSelectableDate: this.maxSelectableDate,
+            ),
+          ],
         ),
-        ...CalendarTableHelper.buildCalendarTableRow(
-          calendarMonth: this.calendarMonth,
-          disableSixthRow: this.disableSixthRow,
-          selectedDateTime: this.selectedDateTime,
-          dayBuilder: this.dayBuilder,
-          onSelectDay: this.onSelectDay,
-          disableClickOnOutOfRange: this.disableClickOnOutOfRange,
-          minimumDayDate: this.minimumDayDate,
-          maximumDayDate: this.maximumDayDate,
-        )
-      ],
+      ),
     );
   }
 }

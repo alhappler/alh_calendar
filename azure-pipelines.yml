@@ -1,21 +1,28 @@
 name: $(Date:yyyyMMdd)$(Rev:r)
 variables:
-  PACKAGE_NAME: 'alh_calendar'
-  MONO_REPO_DIRECTORY: '$(System.DefaultWorkingDirectory)'
-  SOURCE_CODE_DIRECTORY: '$(MONO_REPO_DIRECTORY)/packages/$(PACKAGE_NAME)'
-  FLUTTER_CHANNEL: 'stable'
-  FLUTTER_VERSION: 'latest'
-  CACHE_KEY: '$(SOURCE_CODE_DIRECTORY)/pubspec.yaml'
-  # System.Debug auf true um debugging output von Azure Pipelines zu bekommen
-  System.Debug: 'true'
+# Variable Group which contains the Variables: flutterChannel and flutterVersion
+# Config over Azure Devops > Pipelines > Library
+- group: default-test-configuration
+- template: '../../tools/pipeline_templates/global_variables.yaml'
+- name: PACKAGE_NAME
+  value: 'alh_calendar'
+- name: SOURCE_CODE_DIRECTORY
+  value: '$(MONO_REPO_DIRECTORY)/packages/$(PACKAGE_NAME)'
+- name: CACHE_KEY
+  value: '$(SOURCE_CODE_DIRECTORY)/pubspec.yaml'
+# System.Debug auf true um debugging output von Azure Pipelines zu bekommen
+- name: System.Debug
+  value: 'false'
+# Diagnostic is set to true automatically when System.Debug is set to true
+# See: https://learn.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/review-logs?view=azure-devops#agent-diagnostic-logs
+- name: Agent.Diagnostic
+  value: 'false'
 
 trigger: none
 
 jobs:
   - template: ../../tools/pipeline_templates/default_pipeline.yml
     parameters:
-      flutterChannel: $(FLUTTER_CHANNEL)
-      flutterVersion: $(FLUTTER_VERSION)
       sourceCodeDirectory: $(SOURCE_CODE_DIRECTORY)
       monoRepoDirectory: $(MONO_REPO_DIRECTORY)
       cacheKey: $(CACHE_KEY)

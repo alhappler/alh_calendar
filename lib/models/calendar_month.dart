@@ -21,6 +21,7 @@ class CalendarMonth {
   bool operator ==(Object other) {
     return (other is CalendarMonth) &&
         other.month == this.month &&
+        this.weeks.length == other.weeks.length &&
         this._isWeekEqual(
           calendarWeek: this.weeks,
           other: other.weeks,
@@ -28,7 +29,7 @@ class CalendarMonth {
   }
 
   @override
-  int get hashCode => month.hashCode;
+  int get hashCode => this.month.hashCode;
 
   bool _isWeekEqual({
     required List<CalendarWeek> calendarWeek,

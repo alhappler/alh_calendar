@@ -28,5 +28,5 @@ class CalendarDay {
   }
 
   @override
-  int get hashCode => isInCurrentMonth.hashCode;
+  int get hashCode => this.date.hashCode;
 }

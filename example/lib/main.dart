@@ -44,62 +44,67 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Column(children: [
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    margin: const EdgeInsets.all(8),
-                    child: AlhCalendar(
-                      headerLeading: const Icon(Icons.chevron_left),
-                      headerTrailing: const Icon(Icons.chevron_right),
-                      daysOfWeek: dayMap,
-                      enableHorizontalSwipe: true,
-                      enableSixWeeksForEveryMonth: true,
-                      onReachedMinimumDate: () {
-                        log("REACHED MIN");
-                      },
-                      onReachedMaximumDate: () {
-                        log("REACHED MAX");
-                      },
-                      onMonthChanged: (selectedMonth) {
-                        log('MONTH HAS CHANGED $selectedMonth');
-                      },
-                      onDayChanged: (selectedDay) {
-                        log('SELECTED DATE: $selectedDay');
-                      },
-                      dayOfWeekBuilder: (String dayOfWeek, bool isWeekEnd) {
-                        return Center(
-                          child: Text(
-                            dayOfWeek,
-                            style: TextStyle(
-                                color: isWeekEnd
-                                    ? Colors.blueAccent
-                                    : Colors.redAccent),
-                          ),
-                        );
-                      },
-                      headerBuilder: (DateTime date) {
-                        return CalendarHeaderTitle(
-                          displayMonth:
-                              DateFormat('MMMM yyyy', 'en_Us').format(date),
-                        );
-                      },
-                      dayBuilder: (
-                        CalendarDayBuilderModel calendarDayBuilderModel,
-                      ) {
-                        return CalendarDay(
-                          calendarDayBuilderModel: calendarDayBuilderModel,
-                        );
-                      },
-                    ),
+        body: SingleChildScrollView(
+          child: Column(children: [
+            Card(
+              margin: const EdgeInsets.all(10),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AlhCalendar(
+                  minSelectableDate: DateTime.now().subtract(
+                    const Duration(days: 2 * 30),
                   ),
-                )
-              ],
+                  maxSelectableDate: DateTime.now().add(
+                    const Duration(days: 10 * 30),
+                  ),
+                  disablePreviousMonthFromDate: DateTime.now().subtract(
+                    const Duration(days: 2 * 30 + 5),
+                  ),
+                  disableNextMonthFromDate: DateTime.now().add(
+                    const Duration(days: 10 * 30 + 5),
+                  ),
+                  headerLeading: const Icon(Icons.chevron_left),
+                  headerTrailing: const Icon(Icons.chevron_right),
+                  daysOfWeek: dayMap,
+                  onMonthChanged: (selectedMonth) {
+                    log('MONTH HAS CHANGED $selectedMonth');
+                  },
+                  onDayChanged: (selectedDay) {
+                    log('SELECTED DATE: $selectedDay');
+                  },
+                  dayOfWeekBuilder: (String dayOfWeek, bool isWeekEnd) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          dayOfWeek,
+                          style: TextStyle(
+                            color: isWeekEnd
+                                ? Colors.blueAccent
+                                : Colors.redAccent,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  headerBuilder: (DateTime date) {
+                    return CalendarHeaderTitle(
+                      displayMonth:
+                          DateFormat('MMMM yyyy', 'en_Us').format(date),
+                    );
+                  },
+                  dayBuilder: (
+                    CalendarDayBuilderModel calendarDayBuilderModel,
+                  ) {
+                    return CalendarDay(
+                      calendarDayBuilderModel: calendarDayBuilderModel,
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
