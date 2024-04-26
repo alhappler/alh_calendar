@@ -57,10 +57,10 @@ class _MyAppState extends State<MyApp> {
                   maxSelectableDate: DateTime.now().add(
                     const Duration(days: 10 * 30),
                   ),
-                  minSelectableMonth: DateTime.now().subtract(
+                  disablePreviousMonthFromDate: DateTime.now().subtract(
                     const Duration(days: 2 * 30 + 5),
                   ),
-                  maxSelectableMonth: DateTime.now().add(
+                  disableNextMonthFromDate: DateTime.now().add(
                     const Duration(days: 10 * 30 + 5),
                   ),
                   headerLeading: const Icon(Icons.chevron_left),

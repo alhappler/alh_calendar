@@ -521,8 +521,8 @@ void main() {
 
   final givenMinSelectableDate = DateTime(2000, 1, 1);
   final givenMaxSelectableDate = DateTime(2000, 1, 10);
-  final givenMinSelectableMonth = DateTime(1999, 12, 1);
-  final givenMaxSelectableMonth = DateTime(2000, 2, 10);
+  final givenDisablePreviousMonthFromDate = DateTime(1999, 12, 1);
+  final givenDisableNextMonthFromDate = DateTime(2000, 2, 10);
   final givenInitialDate = DateTime(2000, 1, 5);
   const givenItemCount = 3;
   const givenShowSixWeeksForEveryMonth = true;
@@ -555,8 +555,8 @@ void main() {
             daysOfWeek: givenDayOfWeekMap,
             minSelectableDate: givenMinSelectableDate,
             maxSelectableDate: givenMaxSelectableDate,
-            maxSelectableMonth: givenMaxSelectableMonth,
-            minSelectableMonth: givenMinSelectableMonth,
+            disableNextMonthFromDate: givenDisableNextMonthFromDate,
+            disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
             onCreatedPageView: onCreatedPageView ?? (_) {},
             disableTapOnOutOfRange: givenDisableTapOnOutOfRange,
             onChangeMonth: handleChangeMonth ?? givenHandleChangeMonth,

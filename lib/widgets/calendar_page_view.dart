@@ -18,8 +18,8 @@ class CalendarPageView extends StatefulWidget {
   final Map<DayOfWeek, String> daysOfWeek;
   final DateTime? minSelectableDate;
   final DateTime? maxSelectableDate;
-  final DateTime maxSelectableMonth;
-  final DateTime minSelectableMonth;
+  final DateTime disableNextMonthFromDate;
+  final DateTime disablePreviousMonthFromDate;
   final bool disableTapOnOutOfRange;
   final void Function({
     required int index,
@@ -38,8 +38,8 @@ class CalendarPageView extends StatefulWidget {
     required this.selectedDate,
     required this.minSelectableDate,
     required this.maxSelectableDate,
-    required this.maxSelectableMonth,
-    required this.minSelectableMonth,
+    required this.disableNextMonthFromDate,
+    required this.disablePreviousMonthFromDate,
     required this.disableTapOnOutOfRange,
     required this.onChangeMonth,
     required this.onCreatedPageView,
@@ -131,7 +131,7 @@ class _CalendarPageViewState extends State<CalendarPageView> {
   void _determineInitialPageIndex() {
     final int monthsDifference = DateHelper.getMonthDifference(
       startDate: this.widget.initialDate,
-      endDate: this.widget.minSelectableMonth,
+      endDate: this.widget.disablePreviousMonthFromDate,
     );
     this.initialPageIndex = monthsDifference;
   }
@@ -148,7 +148,7 @@ class _CalendarPageViewState extends State<CalendarPageView> {
   void _determineNumberOfAvailableMonths() {
     final int monthsDifference = DateHelper.getMonthDifference(
       startDate: this.widget.initialDate,
-      endDate: this.widget.maxSelectableMonth,
+      endDate: this.widget.disableNextMonthFromDate,
     );
 
     // The item count is the number of months that can be scrolled

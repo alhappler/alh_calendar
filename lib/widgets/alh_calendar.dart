@@ -52,8 +52,9 @@ class AlhCalendar extends StatefulWidget {
   /// It can be null, indicating that there is no minimum selectable month,
   /// and the user can navigate to any previous month.
   ///
-  /// If the [minSelectableMonth] is not set, the default value is 10 years in the past.
-  final DateTime? minSelectableMonth;
+  /// If the [disablePreviousMonthFromDate] is not set,
+  /// the default value is 10 years in the past.
+  final DateTime? disablePreviousMonthFromDate;
 
   /// The maximum selectable month for the calendar.
   ///
@@ -61,26 +62,26 @@ class AlhCalendar extends StatefulWidget {
   /// It can be null, indicating that there is no maximum selectable month,
   /// and the user can navigate to any future month.
   ///
-  /// If the [maxSelectableMonth] is not set, the default value is 10 years in the future.
-  final DateTime? maxSelectableMonth;
+  /// If the [disableNextMonthFromDate] is not set, the default value is 10 years in the future.
+  final DateTime? disableNextMonthFromDate;
 
   /// Sets the minimum day within the selectable month range.
   ///
   /// Every day before the chosen day is flagged as outside of the range.
   /// All days between the minimum and maximum days are considered in range.
   /// The selected day must fall within the range defined
-  /// by [minSelectableMonth] and [maxSelectableMonth].
+  /// by [disablePreviousMonthFromDate] and [disableNextMonthFromDate].
   /// If [minSelectableDate] is explicitly set but falls outside the allowable month range,
-  /// it will be limited to the [minSelectableMonth] or its default.
+  /// it will be limited to the [disablePreviousMonthFromDate] or its default.
   final DateTime? minSelectableDate;
 
   /// Sets the maximum day within the selectable month range.
   ///
   /// All days after the maximum day are flagged as outside of the range.
   /// The selected day must fall within the range defined
-  /// by [minSelectableMonth] and [maxSelectableMonth].
+  /// by [disablePreviousMonthFromDate] and [disableNextMonthFromDate].
   /// If[maxSelectableDate]is explicitly set but falls outside the allowable month range,
-  /// it will be limited to the [maxSelectableMonth] or its default.
+  /// it will be limited to the [disableNextMonthFromDate] or its default.
   final DateTime? maxSelectableDate;
 
   /// needs a Map of <DayOfWeek, String> to fill DayOfWeekCalendarCells
@@ -164,8 +165,8 @@ class AlhCalendar extends StatefulWidget {
     required this.dayOfWeekBuilder,
     required this.daysOfWeek,
     this.initialDate,
-    this.maxSelectableMonth,
-    this.minSelectableMonth,
+    this.disableNextMonthFromDate,
+    this.disablePreviousMonthFromDate,
     this.minSelectableDate,
     this.maxSelectableDate,
     this.onMonthChanged,
@@ -190,8 +191,8 @@ class _AlhCalendarState extends State<AlhCalendar> {
   late CalendarMonth calendarMonth;
   late DateTime currentDate;
   late DateTime initialDate;
-  late DateTime minSelectableMonth;
-  late DateTime maxSelectableMonth;
+  late DateTime disablePreviousMonthFromDate;
+  late DateTime disableNextMonthFromDate;
   late PageController _pageController;
 
   DateTime? selectedDate;
@@ -213,10 +214,11 @@ class _AlhCalendarState extends State<AlhCalendar> {
       forceSixWeekMonth: this.widget.showSixWeeksForEveryMonth,
     );
 
-    this.maxSelectableMonth = this.widget.maxSelectableMonth ??
+    this.disableNextMonthFromDate = this.widget.disableNextMonthFromDate ??
         this.initialDate.add(const Duration(days: 365 * 10));
-    this.minSelectableMonth = this.widget.minSelectableMonth ??
-        this.initialDate.subtract(const Duration(days: 365 * 10));
+    this.disablePreviousMonthFromDate =
+        this.widget.disablePreviousMonthFromDate ??
+            this.initialDate.subtract(const Duration(days: 365 * 10));
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       this._setPageViewHeight();
@@ -229,9 +231,10 @@ class _AlhCalendarState extends State<AlhCalendar> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CalenderHeader(
-          onPressedNext: this.isMaxSelectableMonth ? null : this._goToNextMonth,
+          onPressedNext:
+              this.isMaxSelectableMonthReached ? null : this._goToNextMonth,
           onPressedPrevious:
-              this.isMinSelectableMonth ? null : this._goToPreviousMonth,
+              this.isMinSelectableMonthReached ? null : this._goToPreviousMonth,
           header: this.widget.headerBuilder(this.currentDate),
           headerPadding: this.widget.headerPadding,
           iconPadding: this.widget.iconPadding,
@@ -287,8 +290,9 @@ class _AlhCalendarState extends State<AlhCalendar> {
                   selectedDate: this.selectedDate,
                   minSelectableDate: this.widget.minSelectableDate,
                   maxSelectableDate: this.widget.maxSelectableDate,
-                  maxSelectableMonth: this.maxSelectableMonth,
-                  minSelectableMonth: this.minSelectableMonth,
+                  disableNextMonthFromDate: this.disableNextMonthFromDate,
+                  disablePreviousMonthFromDate:
+                      this.disablePreviousMonthFromDate,
                   disableTapOnOutOfRange: this.widget.disableTapOnOutOfRange,
                   onChangeMonth: this._handleChangeMonth,
                   onCreatedPageView: (pageController) {
@@ -318,15 +322,15 @@ class _AlhCalendarState extends State<AlhCalendar> {
   }
 
   /// Returns a boolean value indicating whether this is the first month in the calendar.
-  bool get isMinSelectableMonth {
-    return this.currentDate.month == this.minSelectableMonth.month &&
-        this.currentDate.year == this.minSelectableMonth.year;
+  bool get isMinSelectableMonthReached {
+    return this.currentDate.month == this.disablePreviousMonthFromDate.month &&
+        this.currentDate.year == this.disablePreviousMonthFromDate.year;
   }
 
   /// Returns a boolean value indicating whether the current month is the last month.
-  bool get isMaxSelectableMonth {
-    return this.currentDate.month == this.maxSelectableMonth.month &&
-        this.currentDate.year == this.maxSelectableMonth.year;
+  bool get isMaxSelectableMonthReached {
+    return this.currentDate.month == this.disableNextMonthFromDate.month &&
+        this.currentDate.year == this.disableNextMonthFromDate.year;
   }
 
   /// Handles press on headerTrailing.

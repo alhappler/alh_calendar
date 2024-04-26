@@ -702,8 +702,8 @@ void main() {
   Future<void> pumpWidgetAndSettle(
     WidgetTester tester, {
     DateTime? initialDate,
-    DateTime? maxSelectableMonth,
-    DateTime? minSelectableMonth,
+    DateTime? disableNextMonthFromDate,
+    DateTime? disablePreviousMonthFromDate,
     ValueChanged<DateTime>? onMonthChanged,
     ValueChanged<DateTime>? onDayChanged,
     bool? enableJumpToOtherMonth,
@@ -719,8 +719,8 @@ void main() {
             dayOfWeekBuilder: dayOfWeekBuilder,
             daysOfWeek: givenDayOfWeekMap,
             initialDate: initialDate,
-            maxSelectableMonth: maxSelectableMonth,
-            minSelectableMonth: minSelectableMonth,
+            disableNextMonthFromDate: disableNextMonthFromDate,
+            disablePreviousMonthFromDate: disablePreviousMonthFromDate,
             minSelectableDate: givenMinSelectableDate,
             maxSelectableDate: givenMaxSelectableDate,
             headerPadding: givenHeaderPadding,
@@ -806,9 +806,9 @@ void main() {
       (WidgetTester tester) async {
     // given
     final exactedInitialDate = DateTime.now();
-    final expectedMaxSelectableMonth =
+    final expectedDisableNextMonthFromDate =
         exactedInitialDate.add(const Duration(days: 365 * 10));
-    final expectedMinSelectableMonth =
+    final expectedDisablePreviousMonthFromDate =
         exactedInitialDate.subtract(const Duration(days: 365 * 10));
     final expectedHeaderText =
         DateFormat('yyyy-MM-dd').format(exactedInitialDate);
@@ -891,12 +891,12 @@ void main() {
               date2: exactedInitialDate,
             ) &&
             DateHelper.areDatesEqual(
-              date1: widget.maxSelectableMonth,
-              date2: expectedMaxSelectableMonth,
+              date1: widget.disableNextMonthFromDate,
+              date2: expectedDisableNextMonthFromDate,
             ) &&
             DateHelper.areDatesEqual(
-              date1: widget.minSelectableMonth,
-              date2: expectedMinSelectableMonth,
+              date1: widget.disablePreviousMonthFromDate,
+              date2: expectedDisablePreviousMonthFromDate,
             ) &&
             widget.dayBuilder == dayBuilder &&
             widget.dayOfWeekBuilder == dayOfWeekBuilder,
@@ -925,9 +925,9 @@ void main() {
       (WidgetTester tester) async {
     // given
     final givenInitialDate = DateTime(2000, 2, 5);
-    final expectedMaxSelectableMonth =
+    final expectedDisableNextMonthFromDate =
         givenInitialDate.add(const Duration(days: 365 * 10));
-    final expectedMinSelectableMonth =
+    final expectedDisablePreviousMonthFromDate =
         givenInitialDate.subtract(const Duration(days: 365 * 10));
     final expectedHeaderText =
         DateFormat('yyyy-MM-dd').format(givenInitialDate);
@@ -975,8 +975,8 @@ void main() {
             widget.showSixWeeksForEveryMonth == false &&
             widget.enableHorizontalSwipe == false &&
             widget.initialDate == givenInitialDate &&
-            widget.maxSelectableMonth == expectedMaxSelectableMonth &&
-            widget.minSelectableMonth == expectedMinSelectableMonth &&
+            widget.disableNextMonthFromDate == expectedDisableNextMonthFromDate &&
+            widget.disablePreviousMonthFromDate == expectedDisablePreviousMonthFromDate &&
             widget.selectedDate == null &&
             widget.dayBuilder == dayBuilder &&
             widget.dayOfWeekBuilder == dayOfWeekBuilder,
@@ -1007,15 +1007,15 @@ void main() {
         (WidgetTester tester) async {
       // given
       final givenInitialDate = DateTime(2000, 1, 5);
-      final givenMaxSelectableMonth = DateTime(2000, 01);
-      final givenMinSelectableMonth = DateTime(2000, 01);
+      final givenDisableNextMonthFromDate = DateTime(2000, 01);
+      final givenDisablePreviousMonthFromDate = DateTime(2000, 01);
 
       // when
       await pumpWidgetAndSettle(
         tester,
         initialDate: givenInitialDate,
-        maxSelectableMonth: givenMaxSelectableMonth,
-        minSelectableMonth: givenMinSelectableMonth,
+        disableNextMonthFromDate: givenDisableNextMonthFromDate,
+        disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
       );
 
       // then
@@ -1032,8 +1032,10 @@ void main() {
         find.byWidgetPredicate(
           (widget) =>
               widget is CalendarPageView &&
-              widget.maxSelectableMonth == givenMaxSelectableMonth &&
-              widget.minSelectableMonth == givenMinSelectableMonth,
+              widget.disableNextMonthFromDate ==
+                  givenDisableNextMonthFromDate &&
+              widget.disablePreviousMonthFromDate ==
+                  givenDisablePreviousMonthFromDate,
         ),
         findsOneWidget,
       );
@@ -1048,12 +1050,12 @@ void main() {
     });
 
     testWidgets(
-        'GIVEN initialDate, onMonthChanged and maxSelectableMonth is not reached '
+        'GIVEN initialDate, onMonthChanged and disableNextMonthFromDate is not reached '
         'WHEN headerTrailing is tapped '
         'THEN calendarMonth should change to next calendarMonth and call onMonthChanged',
         (WidgetTester tester) async {
       final givenInitialDate = DateTime(2000, 1, 5);
-      final givenMaxSelectableMonth = DateTime(2000, 03);
+      final givenDisableNextMonthFromDate = DateTime(2000, 03);
 
       late DateTime currentMonthDate;
       bool callBackMonthHasChanged = false;
@@ -1066,7 +1068,7 @@ void main() {
       await pumpWidgetAndSettle(
         tester,
         initialDate: givenInitialDate,
-        maxSelectableMonth: givenMaxSelectableMonth,
+        disableNextMonthFromDate: givenDisableNextMonthFromDate,
         onMonthChanged: givenOnMonthChanged,
       );
 
@@ -1088,13 +1090,13 @@ void main() {
     });
 
     testWidgets(
-        'GIVEN initialDate, onMonthChanged and minSelectableMonth is not reached '
+        'GIVEN initialDate, onMonthChanged and disablePreviousMonthFromDate is not reached '
         'WHEN headerLeading is tapped '
         'THEN calendarMonth should change to previous calendarMonth and call onMonthChanged',
         (WidgetTester tester) async {
       // given
       final givenInitialDate = DateTime(2000, 1, 5);
-      final givenMinSelectableMonth = DateTime(1999, 12);
+      final givenDisablePreviousMonthFromDate = DateTime(1999, 12);
 
       late DateTime currentMonthDate;
       bool callBackMonthHasChanged = false;
@@ -1107,7 +1109,7 @@ void main() {
       await pumpWidgetAndSettle(
         tester,
         initialDate: givenInitialDate,
-        minSelectableMonth: givenMinSelectableMonth,
+        disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
         onMonthChanged: givenOnMonthChanged,
       );
 
