@@ -3,6 +3,7 @@ import 'package:alh_calendar/models/calendar_day_builder_model.dart';
 import 'package:alh_calendar/models/calendar_month.dart';
 import 'package:alh_calendar/utils/calendar_table_helper.dart';
 import 'package:alh_calendar/utils/date_helper.dart';
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/calendar_body.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,8 @@ class CalendarPageView extends StatefulWidget {
   final DateTime disableNextMonthFromDate;
   final DateTime disablePreviousMonthFromDate;
   final bool disableTapOnOutOfRange;
+  final bool showFocusedBorder;
+  final FocusedBorderStyle focusedBorderStyle;
   final void Function({
     required int index,
     required DateTime newMonthDate,
@@ -43,6 +46,8 @@ class CalendarPageView extends StatefulWidget {
     required this.disableTapOnOutOfRange,
     required this.onChangeMonth,
     required this.onCreatedPageView,
+    required this.showFocusedBorder,
+    required this.focusedBorderStyle,
     super.key,
   });
 
@@ -60,64 +65,66 @@ class _CalendarPageViewState extends State<CalendarPageView> {
   void initState() {
     super.initState();
 
-    this.calendarMonth = CalendarTableHelper.buildCurrentCalendarMonth(
+    calendarMonth = CalendarTableHelper.buildCurrentCalendarMonth(
       date: DateTime(
-        this.widget.initialDate.year,
-        this.widget.initialDate.month,
+        widget.initialDate.year,
+        widget.initialDate.month,
       ),
-      forceSixWeekMonth: this.widget.showSixWeeksForEveryMonth,
+      forceSixWeekMonth: widget.showSixWeeksForEveryMonth,
     );
 
-    this._determineInitialPageIndex();
+    _determineInitialPageIndex();
 
-    this._determineNumberOfAvailableMonths();
+    _determineNumberOfAvailableMonths();
 
-    this._pageController = PageController(initialPage: initialPageIndex);
+    _pageController = PageController(initialPage: initialPageIndex);
 
-    this.widget.onCreatedPageView(this._pageController);
+    widget.onCreatedPageView(_pageController);
   }
 
   @override
   void dispose() {
-    this._pageController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
-      controller: this._pageController,
-      itemCount: this.itemCount,
-      physics: this.widget.enableHorizontalSwipe
+      controller: _pageController,
+      itemCount: itemCount,
+      physics: widget.enableHorizontalSwipe
           ? null
           : const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final newMonthDate = DateTime(
-          this.widget.initialDate.year,
-          this.widget.initialDate.month + index - this.initialPageIndex,
+          widget.initialDate.year,
+          widget.initialDate.month + index - initialPageIndex,
         );
         final calendarMonth = CalendarTableHelper.buildCurrentCalendarMonth(
           date: newMonthDate,
-          forceSixWeekMonth: this.widget.showSixWeeksForEveryMonth,
+          forceSixWeekMonth: widget.showSixWeeksForEveryMonth,
         );
         return CalendarBody(
-          onSelectDay: this.widget.onSelectDay,
+          onSelectDay: widget.onSelectDay,
           calendarMonth: calendarMonth,
-          dayBuilder: this.widget.dayBuilder,
-          dayOfWeekBuilder: this.widget.dayOfWeekBuilder,
-          daysOfWeek: this.widget.daysOfWeek,
-          selectedDate: this.widget.selectedDate,
-          minSelectableDate: this.widget.minSelectableDate,
-          maxSelectableDate: this.widget.maxSelectableDate,
-          disableTapOnOutOfRange: this.widget.disableTapOnOutOfRange,
+          dayBuilder: widget.dayBuilder,
+          dayOfWeekBuilder: widget.dayOfWeekBuilder,
+          daysOfWeek: widget.daysOfWeek,
+          selectedDate: widget.selectedDate,
+          minSelectableDate: widget.minSelectableDate,
+          maxSelectableDate: widget.maxSelectableDate,
+          disableTapOnOutOfRange: widget.disableTapOnOutOfRange,
+          showFocusedBorder: widget.showFocusedBorder,
+          focusedBorderStyle: widget.focusedBorderStyle,
         );
       },
       onPageChanged: (index) {
         final newMonthDate = DateTime(
-          this.widget.initialDate.year,
-          this.widget.initialDate.month + index - this.initialPageIndex,
+          widget.initialDate.year,
+          widget.initialDate.month + index - initialPageIndex,
         );
-        this.widget.onChangeMonth(index: index, newMonthDate: newMonthDate);
+        widget.onChangeMonth(index: index, newMonthDate: newMonthDate);
       },
     );
   }
@@ -130,10 +137,10 @@ class _CalendarPageViewState extends State<CalendarPageView> {
   /// the difference between the initialDate and the minimumMonthDate.
   void _determineInitialPageIndex() {
     final int monthsDifference = DateHelper.getMonthDifference(
-      startDate: this.widget.initialDate,
-      endDate: this.widget.disablePreviousMonthFromDate,
+      startDate: widget.initialDate,
+      endDate: widget.disablePreviousMonthFromDate,
     );
-    this.initialPageIndex = monthsDifference;
+    initialPageIndex = monthsDifference;
   }
 
   /// Determine the Months count based on maximumMonthDate.
@@ -147,12 +154,12 @@ class _CalendarPageViewState extends State<CalendarPageView> {
   /// 10 years in the future and 10 years the past.
   void _determineNumberOfAvailableMonths() {
     final int monthsDifference = DateHelper.getMonthDifference(
-      startDate: this.widget.initialDate,
-      endDate: this.widget.disableNextMonthFromDate,
+      startDate: widget.initialDate,
+      endDate: widget.disableNextMonthFromDate,
     );
 
     // The item count is the number of months that can be scrolled
     // in the past + the future + 1 (initial month).
-    this.itemCount = this.initialPageIndex + monthsDifference + 1;
+    itemCount = initialPageIndex + monthsDifference + 1;
   }
 }

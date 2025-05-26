@@ -1,11 +1,10 @@
+# alh_calendar
+
 ![Pub Version](https://img.shields.io/pub/v/alh_calendar?include_prereleases&color=%23397ab6&style=flat-square)
 [![codecov](https://codecov.io/gh/alhappler/alh_calendar/branch/master/graph/badge.svg?token=D63TLGD5SP)](https://codecov.io/gh/alhappler/alh_calendar)
 ![GitHub branch checks state](https://img.shields.io/github/checks-status/alhappler/alh_calendar/master?style=flat-square)
 
-<p>
-<img src="https://github.com/alhappler/alh_calendar/blob/master/doc/calendar_demo.gif?raw=true"
-    alt="An animated image of the iOS ReordableGridView UI" height="400"/>
-</p>
+![An animated image of the AlhCalendar in use](https://github.com/alhappler/alh_calendar/blob/master/doc/calendar_demo.gif?raw=true)
 
 With this Widget, you can build a custom calendar.
 
@@ -13,7 +12,6 @@ With this Widget, you can build a custom calendar.
 
 - [Introduction](#introduction)
 - [Usage](#usage)
-- [Example](#example)
 - [Parameters](#parameters)
 
 ## Introduction
@@ -30,7 +28,7 @@ With this package you are able to:
 - show the dates of previous month and next month
 - define a maximum and minimum month
 - define a maximum and minimum day
-- usefull callBacks
+- useful callBacks
 - Tests for the whole written code on `Dart`
 
 ## Usage
@@ -89,7 +87,6 @@ final dayMap = {
       ),
     );
   }
-}
 ```
 
 ## Parameters
@@ -115,8 +112,11 @@ This is a list of all parameters that can be used for the `AlhCalendar` widget.
 | `pageChangeCurve`              | Duration for the page change animation.                                                                                                                                                                                                |        **Curves.easeInOut**         |
 | `headerLeading`                | Custom widget that is left of the header.                                                                                                                                                                                              |       **-**       |
 | `headerTrailing`               | Custom widget that is right of the header.                                                                                                                                                                                             |       **-**       |
+| `showFocusedBorder`            | Show a focus border around the header and day cells when they receive keyboard focus.                                                                                                                                                | `false`                 |
+| `focusedBorderStyle`           | Defines the thickness, color, and corner radii of the focus border (applied only if `showFocusedBorder` is true).                                                                                                                      | `const FocusedBorderStyle()` |
 
 This is a list of the functional parameters that can be used for the `AlhCalendar` widget.
+
 | **Parameter**                                | **Description**                                                 | **Default Value** |
 |----------------------------------------------|-----------------------------------------------------------------|-------------------|
 | `dayBuilder`                                 | Custom builder for the day cells.                               |       **-**       |

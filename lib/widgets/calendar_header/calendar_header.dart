@@ -1,6 +1,8 @@
+import 'package:alh_calendar/utils/focused_border_style.dart';
+import 'package:alh_calendar/widgets/calendar_header/calendar_header_button.dart';
 import 'package:flutter/material.dart';
 
-class CalenderHeader extends StatelessWidget {
+class CalendarHeader extends StatelessWidget {
   final VoidCallback? onPressedNext;
   final VoidCallback? onPressedPrevious;
   final Widget header;
@@ -9,8 +11,10 @@ class CalenderHeader extends StatelessWidget {
   final Widget iconRight;
   final EdgeInsets headerPadding;
   final EdgeInsets iconPadding;
+  final bool showFocusedBorder;
+  final FocusedBorderStyle focusedBorderStyle;
 
-  const CalenderHeader({
+  const CalendarHeader({
     required this.onPressedNext,
     required this.onPressedPrevious,
     required this.header,
@@ -18,45 +22,31 @@ class CalenderHeader extends StatelessWidget {
     required this.iconRight,
     required this.headerPadding,
     required this.iconPadding,
+    required this.showFocusedBorder,
+    required this.focusedBorderStyle,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
-      padding: this.headerPadding,
+      padding: headerPadding,
       child: Row(
         children: [
-          InkWell(
-            customBorder: const CircleBorder(),
-            onTap: this.onPressedPrevious,
-            child: Padding(
-              padding: iconPadding,
-              child: IconTheme(
-                data: IconThemeData(
-                  color: this.onPressedPrevious == null
-                      ? theme.disabledColor
-                      : null,
-                ),
-                child: this.iconLeft,
-              ),
-            ),
+          CalendarHeaderButton(
+            showFocusedBorder: showFocusedBorder,
+            focusedBorderStyle: focusedBorderStyle,
+            icon: iconLeft,
+            padding: iconPadding,
+            onPressed: onPressedPrevious,
           ),
-          Expanded(child: Center(child: this.header)),
-          InkWell(
-            customBorder: const CircleBorder(),
-            onTap: this.onPressedNext,
-            child: Padding(
-              padding: iconPadding,
-              child: IconTheme(
-                data: IconThemeData(
-                  color:
-                      this.onPressedNext == null ? theme.disabledColor : null,
-                ),
-                child: this.iconRight,
-              ),
-            ),
+          Expanded(child: Center(child: header)),
+          CalendarHeaderButton(
+            showFocusedBorder: showFocusedBorder,
+            focusedBorderStyle: focusedBorderStyle,
+            icon: iconRight,
+            padding: iconPadding,
+            onPressed: onPressedNext,
           ),
         ],
       ),

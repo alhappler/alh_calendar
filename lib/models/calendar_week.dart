@@ -12,13 +12,13 @@ class CalendarWeek {
   @override
   bool operator ==(Object other) {
     return (other is CalendarWeek) &&
-        other.days[0] == this.days[0] &&
-        other.days[1] == this.days[1] &&
-        other.days[2] == this.days[2] &&
-        other.days[3] == this.days[3] &&
-        other.days[4] == this.days[4] &&
-        other.days[5] == this.days[5] &&
-        other.days[6] == this.days[6];
+        other.days[0] == days[0] &&
+        other.days[1] == days[1] &&
+        other.days[2] == days[2] &&
+        other.days[3] == days[3] &&
+        other.days[4] == days[4] &&
+        other.days[5] == days[5] &&
+        other.days[6] == days[6];
   }
 
   @override

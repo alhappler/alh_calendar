@@ -3,12 +3,21 @@ import 'package:alh_calendar/models/calendar_day.dart';
 import 'package:alh_calendar/models/calendar_day_builder_model.dart';
 import 'package:alh_calendar/models/calendar_month.dart';
 import 'package:alh_calendar/models/calendar_week.dart';
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/calendar_body.dart';
 import 'package:alh_calendar/widgets/calendar_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const givenShowFocusedBorder = true;
+  const givenFocusedBorderStyle = FocusedBorderStyle(
+    color: Colors.red,
+    thickness: 2,
+    daysBorderRadius: BorderRadius.all(Radius.circular(10)),
+    headerBorderRadius: BorderRadius.all(Radius.circular(20)),
+  );
+
   final expectedCurrentCalendarMonth = CalendarMonth(
     month: DateTime(2000, 01, 01),
     weeks: [
@@ -545,6 +554,8 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: CalendarPageView(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             enableHorizontalSwipe: enableHorizontalSwipe ?? true,
             initialDate: initialDate ?? givenInitialDate,
             showSixWeeksForEveryMonth: givenShowSixWeeksForEveryMonth,
@@ -595,6 +606,8 @@ void main() {
       find.byWidgetPredicate(
         (widget) =>
             widget is CalendarBody &&
+            widget.showFocusedBorder == givenShowFocusedBorder &&
+            widget.focusedBorderStyle == givenFocusedBorderStyle &&
             widget.onSelectDay == givenOnSelectDay &&
             widget.daysOfWeek == givenDayOfWeekMap &&
             widget.selectedDate == null &&

@@ -4,6 +4,7 @@ import 'package:alh_calendar/models/calendar_day_builder_model.dart';
 import 'package:alh_calendar/models/calendar_month.dart';
 import 'package:alh_calendar/models/calendar_week.dart';
 import 'package:alh_calendar/utils/calendar_table_helper.dart';
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/calendar_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,6 +13,12 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   const givenForceSixWeekMonth = true;
+  const givenShowFocusedBorder = true;
+  const givenFocusedBorderStyle = FocusedBorderStyle(
+    color: Colors.red,
+    thickness: 2,
+    daysBorderRadius: BorderRadius.all(Radius.circular(10)),
+  );
 
   bool matchCalendarCells({
     required CalendarCell firstCalendarCell,
@@ -415,6 +422,8 @@ void main() {
 
       // when
       final actual = CalendarTableHelper.buildCalendarTableRow(
+        showFocusedBorder: givenShowFocusedBorder,
+        focusedBorderStyle: givenFocusedBorderStyle,
         calendarMonth: givenCalendarMonth,
         selectedDate: givenSelectedDate,
         dayBuilder: dayBuilder,
@@ -426,6 +435,8 @@ void main() {
       final expectedTableRow1 = TableRow(
         children: [
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 8, 29),
             isInCurrentMonth: false,
             isSelected: false,
@@ -435,6 +446,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 8, 30),
             isInCurrentMonth: false,
             isSelected: false,
@@ -444,6 +457,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 8, 31),
             isInCurrentMonth: false,
             isSelected: false,
@@ -453,6 +468,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 1),
             isInCurrentMonth: true,
             isSelected: false,
@@ -462,6 +479,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 2),
             isInCurrentMonth: true,
             isSelected: false,
@@ -471,6 +490,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 3),
             isInCurrentMonth: true,
             isSelected: false,
@@ -480,6 +501,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 4),
             isInCurrentMonth: true,
             isSelected: false,
@@ -493,6 +516,8 @@ void main() {
       final expectedTableRow2 = TableRow(
         children: [
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 5),
             isInCurrentMonth: true,
             isSelected: false,
@@ -502,6 +527,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 6),
             isInCurrentMonth: true,
             isSelected: false,
@@ -511,6 +538,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 7),
             isInCurrentMonth: true,
             isSelected: false,
@@ -520,6 +549,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 8),
             isInCurrentMonth: true,
             isSelected: false,
@@ -529,6 +560,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 9),
             isInCurrentMonth: true,
             isSelected: false,
@@ -538,6 +571,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 10),
             isInCurrentMonth: true,
             isSelected: false,
@@ -547,6 +582,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 11),
             isInCurrentMonth: true,
             isSelected: false,
@@ -560,6 +597,8 @@ void main() {
       final expectedTableRow3 = TableRow(
         children: [
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 12),
             isInCurrentMonth: true,
             isSelected: false,
@@ -569,6 +608,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 13),
             isInCurrentMonth: true,
             isSelected: false,
@@ -578,6 +619,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 14),
             isInCurrentMonth: true,
             isSelected: false,
@@ -587,6 +630,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 15),
             isInCurrentMonth: true,
             isSelected: false,
@@ -596,6 +641,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 16),
             isInCurrentMonth: true,
             isSelected: false,
@@ -605,6 +652,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 17),
             isInCurrentMonth: true,
             isSelected: false,
@@ -614,6 +663,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 18),
             isInCurrentMonth: true,
             isSelected: false,
@@ -627,6 +678,8 @@ void main() {
       final expectedTableRow4 = TableRow(
         children: [
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 19),
             isInCurrentMonth: true,
             isSelected: false,
@@ -636,6 +689,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 20),
             isInCurrentMonth: true,
             isSelected: false,
@@ -645,6 +700,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 21),
             isInCurrentMonth: true,
             isSelected: false,
@@ -654,6 +711,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 22),
             isInCurrentMonth: true,
             isSelected: false,
@@ -663,6 +722,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 23),
             isInCurrentMonth: true,
             isSelected: false,
@@ -672,6 +733,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 24),
             isInCurrentMonth: true,
             isSelected: false,
@@ -681,6 +744,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 25),
             isInCurrentMonth: true,
             isSelected: false,
@@ -694,6 +759,8 @@ void main() {
       final expectedTableRow5 = TableRow(
         children: [
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 26),
             isInCurrentMonth: true,
             isSelected: true,
@@ -703,6 +770,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 27),
             isInCurrentMonth: true,
             isSelected: false,
@@ -712,6 +781,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 28),
             isInCurrentMonth: true,
             isSelected: false,
@@ -721,6 +792,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 29),
             isInCurrentMonth: true,
             isSelected: false,
@@ -730,6 +803,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 9, 30),
             isInCurrentMonth: true,
             isSelected: false,
@@ -739,6 +814,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 1),
             isInCurrentMonth: false,
             isSelected: false,
@@ -748,6 +825,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 2),
             isInCurrentMonth: false,
             isSelected: false,
@@ -761,6 +840,8 @@ void main() {
       final expectedTableRow6 = TableRow(
         children: [
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 3),
             isInCurrentMonth: false,
             isSelected: false,
@@ -770,6 +851,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 4),
             isInCurrentMonth: false,
             isSelected: false,
@@ -779,6 +862,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 5),
             isInCurrentMonth: false,
             isSelected: false,
@@ -788,6 +873,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 6),
             isInCurrentMonth: false,
             isSelected: false,
@@ -797,6 +884,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 7),
             isInCurrentMonth: false,
             isSelected: false,
@@ -806,6 +895,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 8),
             isInCurrentMonth: false,
             isSelected: false,
@@ -815,6 +906,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 9),
             isInCurrentMonth: false,
             isSelected: false,
@@ -877,6 +970,8 @@ void main() {
 
       // when
       final actual = CalendarTableHelper.buildCalendarTableRow(
+        showFocusedBorder: givenShowFocusedBorder,
+        focusedBorderStyle: givenFocusedBorderStyle,
         calendarMonth: givenCalendarMonth,
         selectedDate: DateTime(2022, 09, 26),
         dayBuilder: dayBuilder,
@@ -891,6 +986,8 @@ void main() {
       final expectedTableRow = TableRow(
         children: [
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 3),
             isInCurrentMonth: false,
             isSelected: false,
@@ -900,6 +997,8 @@ void main() {
             isOutOfRange: true,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 4),
             isInCurrentMonth: false,
             isSelected: false,
@@ -909,6 +1008,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 5),
             isInCurrentMonth: false,
             isSelected: false,
@@ -918,6 +1019,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 6),
             isInCurrentMonth: false,
             isSelected: false,
@@ -927,6 +1030,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 7),
             isInCurrentMonth: false,
             isSelected: false,
@@ -936,6 +1041,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 8),
             isInCurrentMonth: false,
             isSelected: false,
@@ -945,6 +1052,8 @@ void main() {
             isOutOfRange: false,
           ),
           CalendarCell(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             date: DateTime(2022, 10, 9),
             isInCurrentMonth: false,
             isSelected: false,

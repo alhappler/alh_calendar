@@ -22,11 +22,11 @@ class CalendarDay {
   @override
   bool operator ==(Object other) {
     return (other is CalendarDay) &&
-        other.date == this.date &&
-        other.dayOfWeek == this.dayOfWeek &&
-        other.isInCurrentMonth == this.isInCurrentMonth;
+        other.date == date &&
+        other.dayOfWeek == dayOfWeek &&
+        other.isInCurrentMonth == isInCurrentMonth;
   }
 
   @override
-  int get hashCode => this.date.hashCode;
+  int get hashCode => date.hashCode;
 }
