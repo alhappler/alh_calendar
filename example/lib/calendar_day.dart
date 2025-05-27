@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 class CalendarDay extends StatelessWidget {
   final CalendarDayBuilderModel calendarDayBuilderModel;
 
-  const CalendarDay({
-    required this.calendarDayBuilderModel,
-    Key? key,
-  }) : super(key: key);
+  const CalendarDay({required this.calendarDayBuilderModel, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(7.5),
+      padding: const EdgeInsets.all(5.5),
       child: DecoratedBox(
         decoration: _getDecoration(
           context: context,
@@ -24,9 +21,11 @@ class CalendarDay extends StatelessWidget {
             child: Text(
               calendarDayBuilderModel.dateTime!.day.toString(),
               style: TextStyle(
-                  color: calendarDayBuilderModel.isOutOfRange == true
-                      ? Colors.redAccent
-                      : Colors.black),
+                color:
+                    calendarDayBuilderModel.isOutOfRange == true
+                        ? Colors.redAccent
+                        : Colors.black,
+              ),
             ),
           ),
         ),
@@ -39,15 +38,12 @@ class CalendarDay extends StatelessWidget {
     required CalendarDayBuilderModel calendarDayBuilderModel,
   }) {
     if (calendarDayBuilderModel.isSelected) {
-      return const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.red,
-      );
+      return const BoxDecoration(shape: BoxShape.circle, color: Colors.red);
     } else if (calendarDayBuilderModel.isWeekend) {
       if (!calendarDayBuilderModel.isInCurrentMonth) {
         return BoxDecoration(
           shape: BoxShape.circle,
-          color: Theme.of(context).primaryColor.withOpacity(0.4),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.4),
         );
       } else {
         return BoxDecoration(
@@ -56,15 +52,9 @@ class CalendarDay extends StatelessWidget {
         );
       }
     } else if (calendarDayBuilderModel.isInCurrentMonth) {
-      return const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.grey,
-      );
+      return const BoxDecoration(shape: BoxShape.circle, color: Colors.grey);
     } else {
-      return const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.black12,
-      );
+      return const BoxDecoration(shape: BoxShape.circle, color: Colors.black12);
     }
   }
 }

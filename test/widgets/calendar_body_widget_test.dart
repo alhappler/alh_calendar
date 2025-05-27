@@ -1,5 +1,6 @@
 import 'package:alh_calendar/enums/day_of_week.dart';
 import 'package:alh_calendar/models/calendar_day_builder_model.dart';
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/calendar_body.dart';
 import 'package:alh_calendar/widgets/calendar_cell.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,13 @@ import '../calendar_builder.dart';
 void main() {
   final calendarBuilder = CalendarBuilder();
   final givenCalendarMonth = calendarBuilder.getCalendarMonth();
+  const givenShowFocusedBorder = true;
+
+  const givenFocusedBorderStyle = FocusedBorderStyle(
+    color: Colors.red,
+    thickness: 2,
+    daysBorderRadius: BorderRadius.all(Radius.circular(10)),
+  );
 
   final givenDayOfWeekMap = {
     DayOfWeek.monday: 'Mon',
@@ -61,6 +69,8 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: CalendarBody(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             calendarMonth: givenCalendarMonth,
             dayBuilder: dayBuilder,
             dayOfWeekBuilder: dayOfWeekBuilder,
@@ -126,6 +136,8 @@ void main() {
       find.byWidgetPredicate(
         (widget) =>
             widget is CalendarCell &&
+            widget.showFocusedBorder == givenShowFocusedBorder &&
+            widget.focusedBorderStyle == givenFocusedBorderStyle &&
             widget.isOutOfRange == false &&
             widget.isSelected == false &&
             widget.dayBuilder == dayBuilder &&

@@ -3,6 +3,7 @@ import 'package:alh_calendar/models/calendar_day.dart';
 import 'package:alh_calendar/models/calendar_month.dart';
 import 'package:alh_calendar/models/calendar_week.dart';
 import 'package:alh_calendar/utils/date_helper.dart';
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/alh_calendar.dart';
 import 'package:alh_calendar/widgets/calendar_cell.dart';
 import 'package:flutter/material.dart';
@@ -145,6 +146,8 @@ class CalendarTableHelper {
     required DayBuilder dayBuilder,
     required ValueChanged<DateTime> onSelectDay,
     required bool disableTapOnOutOfRange,
+    required bool showFocusedBorder,
+    required FocusedBorderStyle focusedBorderStyle,
     DateTime? minSelectableDate,
     DateTime? maxSelectableDate,
     DateTime? selectedDate,
@@ -155,6 +158,8 @@ class CalendarTableHelper {
             children: week.days
                 .map(
                   (day) => _buildCalendarCell(
+                    showFocusedBorder: showFocusedBorder,
+                    focusedBorderStyle: focusedBorderStyle,
                     calendarDay: day,
                     calendarWeek: week,
                     selectedDate: selectedDate,
@@ -178,6 +183,8 @@ class CalendarTableHelper {
     required DayBuilder dayBuilder,
     required ValueChanged<DateTime> onSelectDay,
     required bool disableTapOnOutOfRange,
+    required bool showFocusedBorder,
+    required FocusedBorderStyle focusedBorderStyle,
     DateTime? minSelectableDate,
     DateTime? maxSelectableDate,
   }) {
@@ -189,6 +196,8 @@ class CalendarTableHelper {
     );
     return CalendarCell(
       date: calendarDay.date,
+      showFocusedBorder: showFocusedBorder,
+      focusedBorderStyle: focusedBorderStyle,
       isInCurrentMonth: calendarDay.isInCurrentMonth,
       isSelected: DateHelper.areDatesEqual(
         date1: selectedDate,

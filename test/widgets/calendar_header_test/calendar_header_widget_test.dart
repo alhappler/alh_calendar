@@ -1,4 +1,6 @@
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/calendar_header/calendar_header.dart';
+import 'package:alh_calendar/widgets/calendar_header/calendar_header_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,6 +10,13 @@ void main() {
   const givenRightIcon = Icon(Icons.chevron_right);
   const givenHeaderPadding = EdgeInsets.all(18);
   const givenIconPadding = EdgeInsets.all(3);
+  const givenShowFocusedBorder = true;
+
+  const givenFocusedBorderStyle = FocusedBorderStyle(
+    color: Colors.red,
+    thickness: 2,
+    daysBorderRadius: BorderRadius.all(Radius.circular(10)),
+  );
 
   Future<void> pumpWidget(
     WidgetTester tester, {
@@ -17,7 +26,9 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: CalenderHeader(
+          body: CalendarHeader(
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
             onPressedNext: onPressedNext,
             onPressedPrevious: onPressedPrevious,
             header: givenHeader,
@@ -36,10 +47,15 @@ void main() {
       'WHEN CalendarHeader is pumped '
       'THEN should show expected structure', (WidgetTester tester) async {
     // given
+    void givenOnPressedNext() {}
+    void givenOnPressedPrevious() {}
 
     // when
-    await pumpWidget(tester);
-    final theme = Theme.of(tester.element(find.byType(IconTheme).first));
+    await pumpWidget(
+      tester,
+      onPressedNext: givenOnPressedNext,
+      onPressedPrevious: givenOnPressedPrevious,
+    );
 
     // then
     expect(
@@ -52,20 +68,12 @@ void main() {
     expect(
       find.byWidgetPredicate(
         (widget) =>
-            widget is InkWell &&
-            widget.customBorder is CircleBorder &&
-            (widget.child! as Padding).padding == givenIconPadding &&
-            ((widget.child! as Padding).child! as IconTheme).child ==
-                givenLeftIcon,
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is IconTheme &&
-            widget.data.color == theme.disabledColor &&
-            widget.child == givenLeftIcon,
+            widget is CalendarHeaderButton &&
+            widget.showFocusedBorder == givenShowFocusedBorder &&
+            widget.focusedBorderStyle == givenFocusedBorderStyle &&
+            widget.icon == givenLeftIcon &&
+            widget.padding == givenIconPadding &&
+            widget.onPressed == givenOnPressedPrevious,
       ),
       findsOneWidget,
     );
@@ -81,20 +89,12 @@ void main() {
     expect(
       find.byWidgetPredicate(
         (widget) =>
-            widget is InkWell &&
-            widget.customBorder is CircleBorder &&
-            (widget.child! as Padding).padding == givenIconPadding &&
-            ((widget.child! as Padding).child! as IconTheme).child ==
-                givenRightIcon,
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is IconTheme &&
-            widget.data.color == theme.disabledColor &&
-            widget.child == givenRightIcon,
+            widget is CalendarHeaderButton &&
+            widget.showFocusedBorder == givenShowFocusedBorder &&
+            widget.focusedBorderStyle == givenFocusedBorderStyle &&
+            widget.icon == givenRightIcon &&
+            widget.padding == givenIconPadding &&
+            widget.onPressed == givenOnPressedNext,
       ),
       findsOneWidget,
     );
@@ -117,16 +117,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // then
-    expect(counter, 1);
-    expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is IconTheme &&
-            widget.data.color == null &&
-            widget.child == givenLeftIcon,
-      ),
-      findsOneWidget,
-    );
+    expect(counter, equals(1));
   });
 
   testWidgets(
@@ -146,15 +137,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // then
-    expect(counter, 1);
-    expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is IconTheme &&
-            widget.data.color == null &&
-            widget.child == givenRightIcon,
-      ),
-      findsOneWidget,
-    );
+    expect(counter, equals(1));
   });
 }

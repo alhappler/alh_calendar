@@ -1,5 +1,7 @@
 import 'package:alh_calendar/models/calendar_day_builder_model.dart';
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/alh_calendar.dart';
+import 'package:alh_calendar/widgets/focused_border.dart';
 import 'package:flutter/material.dart';
 
 /// Displays a single cell within the calendar.
@@ -14,6 +16,8 @@ class CalendarCell extends StatelessWidget {
   final bool isOutOfRange;
   final DayBuilder dayBuilder;
   final VoidCallback? onTap;
+  final bool showFocusedBorder;
+  final FocusedBorderStyle focusedBorderStyle;
 
   const CalendarCell({
     required this.date,
@@ -23,24 +27,33 @@ class CalendarCell extends StatelessWidget {
     required this.dayBuilder,
     required this.onTap,
     required this.isOutOfRange,
+    required this.showFocusedBorder,
+    required this.focusedBorderStyle,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     final calendarDayBuilderModel = CalendarDayBuilderModel(
-      dateTime: this.date,
-      isInCurrentMonth: this.isInCurrentMonth,
+      dateTime: date,
+      isInCurrentMonth: isInCurrentMonth,
       isSelected: isSelected,
-      isWeekend: this.isWeekend,
-      isOutOfRange: this.isOutOfRange,
+      isWeekend: isWeekend,
+      isOutOfRange: isOutOfRange,
     );
 
-    return InkWell(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: this.onTap,
-      child: this.dayBuilder(calendarDayBuilderModel),
+    return FocusedBorder(
+      showFocusedBorder: showFocusedBorder,
+      color: focusedBorderStyle.color,
+      thickness: focusedBorderStyle.thickness,
+      borderRadius: focusedBorderStyle.daysBorderRadius,
+      builder: (onFocusChange) => InkWell(
+        onFocusChange: onFocusChange,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: onTap,
+        child: dayBuilder(calendarDayBuilderModel),
+      ),
     );
   }
 }

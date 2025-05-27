@@ -32,11 +32,11 @@ class CalendarDayBuilderModel {
   @override
   bool operator ==(Object other) {
     return (other is CalendarDayBuilderModel) &&
-        other.dateTime == this.dateTime &&
-        other.isInCurrentMonth == this.isInCurrentMonth &&
-        other.isSelected == this.isSelected &&
-        other.isWeekend == this.isWeekend &&
-        other.isOutOfRange == this.isOutOfRange;
+        other.dateTime == dateTime &&
+        other.isInCurrentMonth == isInCurrentMonth &&
+        other.isSelected == isSelected &&
+        other.isWeekend == isWeekend &&
+        other.isOutOfRange == isOutOfRange;
   }
 
   @override

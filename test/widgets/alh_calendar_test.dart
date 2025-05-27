@@ -4,6 +4,7 @@ import 'package:alh_calendar/models/calendar_day_builder_model.dart';
 import 'package:alh_calendar/models/calendar_month.dart';
 import 'package:alh_calendar/models/calendar_week.dart';
 import 'package:alh_calendar/utils/date_helper.dart';
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/alh_calendar.dart';
 import 'package:alh_calendar/widgets/calendar_body.dart';
 import 'package:alh_calendar/widgets/calendar_header/calendar_header.dart';
@@ -770,9 +771,11 @@ void main() {
     expect(
       find.byWidgetPredicate(
         (widget) =>
-            widget is CalenderHeader &&
+            widget is CalendarHeader &&
             widget.onPressedNext != null &&
             widget.onPressedPrevious != null &&
+            widget.showFocusedBorder == false &&
+            widget.focusedBorderStyle == const FocusedBorderStyle() &&
             widget.headerPadding ==
                 const EdgeInsets.symmetric(horizontal: 3.0) &&
             widget.iconPadding == const EdgeInsets.all(8),
@@ -786,6 +789,8 @@ void main() {
             widget.calendarMonth.weeks.length == 6 &&
             widget.daysOfWeek == givenDayOfWeekMap &&
             widget.selectedDate == givenInitialDate &&
+            widget.showFocusedBorder == false &&
+            widget.focusedBorderStyle == const FocusedBorderStyle() &&
             widget.dayBuilder == dayBuilder &&
             widget.dayOfWeekBuilder == dayOfWeekBuilder &&
             widget.calendarMonth == calendarMonthJanuary2000 &&
@@ -800,18 +805,18 @@ void main() {
   });
 
   testWidgets(
-      'GIVEN '
+      'GIVEN custom values '
       'WHEN AlhCalendar is pumped '
       'THEN should show expected structure with default values and expected CalendarMonth',
       (WidgetTester tester) async {
     // given
-    final exactedInitialDate = DateTime.now();
-    final expectedDisableNextMonthFromDate =
-        exactedInitialDate.add(const Duration(days: 365 * 10));
-    final expectedDisablePreviousMonthFromDate =
-        exactedInitialDate.subtract(const Duration(days: 365 * 10));
-    final expectedHeaderText =
-        DateFormat('yyyy-MM-dd').format(exactedInitialDate);
+    const givenShowFocusedBorder = true;
+
+    const givenFocusedBorderStyle = FocusedBorderStyle(
+      color: Colors.red,
+      thickness: 2,
+      daysBorderRadius: BorderRadius.all(Radius.circular(10)),
+    );
 
     // when
     await tester.pumpWidget(
@@ -824,6 +829,8 @@ void main() {
             headerTrailing: givenHeaderTrailing,
             dayOfWeekBuilder: dayOfWeekBuilder,
             daysOfWeek: givenDayOfWeekMap,
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
           ),
         ),
       ),
@@ -831,6 +838,14 @@ void main() {
     await tester.pumpAndSettle();
 
     // then
+    final expectedInitialDate = DateTime.now();
+    final expectedDisableNextMonthFromDate =
+        expectedInitialDate.add(const Duration(days: 365 * 10));
+    final expectedDisablePreviousMonthFromDate =
+        expectedInitialDate.subtract(const Duration(days: 365 * 10));
+    final expectedHeaderText =
+        DateFormat('yyyy-MM-dd').format(expectedInitialDate);
+
     expect(
       find.byWidgetPredicate(
         (widget) =>
@@ -853,8 +868,10 @@ void main() {
     expect(
       find.byWidgetPredicate(
         (widget) =>
-            widget is CalenderHeader &&
+            widget is CalendarHeader &&
             widget.iconLeft == givenHeaderLeading &&
+            widget.showFocusedBorder == givenShowFocusedBorder &&
+            widget.focusedBorderStyle == givenFocusedBorderStyle &&
             widget.onPressedNext != null &&
             widget.onPressedPrevious != null &&
             widget.iconRight == givenHeaderTrailing &&
@@ -877,6 +894,8 @@ void main() {
         (widget) =>
             widget is CalendarPageView &&
             widget.daysOfWeek == givenDayOfWeekMap &&
+            widget.showFocusedBorder == givenShowFocusedBorder &&
+            widget.focusedBorderStyle == givenFocusedBorderStyle &&
             widget.minSelectableDate == null &&
             widget.maxSelectableDate == null &&
             widget.disableTapOnOutOfRange == true &&
@@ -884,11 +903,11 @@ void main() {
             widget.showSixWeeksForEveryMonth == true &&
             DateHelper.areDatesEqual(
               date1: widget.selectedDate,
-              date2: exactedInitialDate,
+              date2: expectedInitialDate,
             ) &&
             DateHelper.areDatesEqual(
               date1: widget.initialDate,
-              date2: exactedInitialDate,
+              date2: expectedInitialDate,
             ) &&
             DateHelper.areDatesEqual(
               date1: widget.disableNextMonthFromDate,
@@ -902,13 +921,6 @@ void main() {
             widget.dayOfWeekBuilder == dayOfWeekBuilder,
       ),
       findsOneWidget,
-    );
-    expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is Padding && widget.padding == const EdgeInsets.all(2),
-      ),
-      findsNWidgets(42),
     );
     expect(
       find.byWidgetPredicate(
@@ -952,7 +964,7 @@ void main() {
     expect(
       find.byWidgetPredicate(
         (widget) =>
-            widget is CalenderHeader &&
+            widget is CalendarHeader &&
             widget.headerPadding == givenHeaderPadding &&
             widget.iconPadding == givenIconPadding &&
             widget.onPressedNext != null &&
@@ -1024,7 +1036,7 @@ void main() {
       expect(
         find.byWidgetPredicate(
           (widget) =>
-              widget is CalenderHeader &&
+              widget is CalendarHeader &&
               widget.onPressedNext == null &&
               widget.onPressedPrevious == null,
         ),

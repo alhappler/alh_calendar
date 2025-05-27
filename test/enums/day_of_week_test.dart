@@ -2,11 +2,11 @@ import 'package:alh_calendar/enums/day_of_week.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("#values", () {
+  group('#values', () {
     test(
-        "GIVEN "
-        "WHEN values "
-        "THEN should return all known values", () {
+        'GIVEN '
+        'WHEN values '
+        'THEN should return all known values', () {
       // given
 
       // when
@@ -26,11 +26,11 @@ void main() {
     });
   });
 
-  group("#isWeekend", () {
+  group('#isWeekend', () {
     test(
-        "GIVEN DayOfWeek.saturday "
-        "WHEN .isWeekend is called "
-        "THEN should return true", () {
+        'GIVEN DayOfWeek.saturday '
+        'WHEN .isWeekend is called '
+        'THEN should return true', () {
       // given
       const givenDayOfWeek = DayOfWeek.saturday;
 
@@ -42,9 +42,9 @@ void main() {
     });
 
     test(
-        "GIVEN DayOfWeek.sunday "
-        "WHEN .isWeekend is called "
-        "THEN should return true", () {
+        'GIVEN DayOfWeek.sunday '
+        'WHEN .isWeekend is called '
+        'THEN should return true', () {
       // given
       const givenDayOfWeek = DayOfWeek.sunday;
 
@@ -56,9 +56,9 @@ void main() {
     });
 
     test(
-        "GIVEN DayOfWeek.monday "
-        "WHEN .isWeekend is called "
-        "THEN should return false", () {
+        'GIVEN DayOfWeek.monday '
+        'WHEN .isWeekend is called '
+        'THEN should return false', () {
       // given
       const givenDayOfWeek = DayOfWeek.monday;
 

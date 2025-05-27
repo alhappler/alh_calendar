@@ -1,6 +1,7 @@
 import 'package:alh_calendar/enums/day_of_week.dart';
 import 'package:alh_calendar/models/calendar_month.dart';
 import 'package:alh_calendar/utils/calendar_table_helper.dart';
+import 'package:alh_calendar/utils/focused_border_style.dart';
 import 'package:alh_calendar/widgets/alh_calendar.dart';
 import 'package:flutter/material.dart';
 
@@ -44,6 +45,12 @@ class CalendarBody extends StatelessWidget {
   /// All days after chosen maxSelectableDate are flagged as outOfRange.
   final DateTime? maxSelectableDate;
 
+  /// Shows a border around the header and days when focused.
+  final bool showFocusedBorder;
+
+  /// Style for the focused border around the header and days.
+  final FocusedBorderStyle focusedBorderStyle;
+
   const CalendarBody({
     required this.calendarMonth,
     required this.dayBuilder,
@@ -54,6 +61,8 @@ class CalendarBody extends StatelessWidget {
     required this.selectedDate,
     required this.minSelectableDate,
     required this.maxSelectableDate,
+    required this.showFocusedBorder,
+    required this.focusedBorderStyle,
     super.key,
   });
 
@@ -69,9 +78,9 @@ class CalendarBody extends StatelessWidget {
               children: List.generate(
                 DateTime.daysPerWeek,
                 (day) {
-                  final dayValue = this.daysOfWeek.entries.elementAt(day);
+                  final dayValue = daysOfWeek.entries.elementAt(day);
 
-                  return this.dayOfWeekBuilder(
+                  return dayOfWeekBuilder(
                     dayValue.value,
                     dayValue.key.isWeekend,
                   );
@@ -79,13 +88,15 @@ class CalendarBody extends StatelessWidget {
               ),
             ),
             ...CalendarTableHelper.buildCalendarTableRow(
-              calendarMonth: this.calendarMonth,
-              selectedDate: this.selectedDate,
-              dayBuilder: this.dayBuilder,
-              onSelectDay: this.onSelectDay,
-              disableTapOnOutOfRange: this.disableTapOnOutOfRange,
-              minSelectableDate: this.minSelectableDate,
-              maxSelectableDate: this.maxSelectableDate,
+              showFocusedBorder: showFocusedBorder,
+              focusedBorderStyle: focusedBorderStyle,
+              calendarMonth: calendarMonth,
+              selectedDate: selectedDate,
+              dayBuilder: dayBuilder,
+              onSelectDay: onSelectDay,
+              disableTapOnOutOfRange: disableTapOnOutOfRange,
+              minSelectableDate: minSelectableDate,
+              maxSelectableDate: maxSelectableDate,
             ),
           ],
         ),
