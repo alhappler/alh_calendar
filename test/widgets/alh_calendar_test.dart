@@ -658,23 +658,19 @@ void main() {
 
   Padding dayBuilder(
     CalendarDayBuilderModel calendarDayBuilderModel,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: Text(
-        '${calendarDayBuilderModel.dateTime!.month} ${calendarDayBuilderModel.dateTime!.day}',
-      ),
-    );
-  }
+  ) =>
+      Padding(
+        padding: const EdgeInsets.all(2),
+        child: Text(
+          '${calendarDayBuilderModel.dateTime!.month} ${calendarDayBuilderModel.dateTime!.day}',
+        ),
+      );
 
-  TableCell dayOfWeekBuilder(
+  Widget dayOfWeekBuilder(
     String dayOfWeek,
     bool isWeekEnd,
-  ) {
-    return const TableCell(
-      child: Center(),
-    );
-  }
+  ) =>
+      const Center(child: SizedBox());
 
   Text headerTitleBuilder(DateTime date) {
     // just show the date part.
@@ -702,6 +698,10 @@ void main() {
 
   Future<void> pumpWidgetAndSettle(
     WidgetTester tester, {
+    Widget Function(bool)? headerLeadingBuilder,
+    Widget Function(bool)? headerTrailingBuilder,
+    void Function(CalendarMonth newMonth)? onPreviousMonth,
+    void Function(CalendarMonth newMonth)? onNextMonth,
     DateTime? initialDate,
     DateTime? disableNextMonthFromDate,
     DateTime? disablePreviousMonthFromDate,
@@ -715,8 +715,10 @@ void main() {
           body: AlhCalendar(
             dayBuilder: dayBuilder,
             headerBuilder: headerTitleBuilder,
-            headerLeading: givenHeaderLeading,
-            headerTrailing: givenHeaderTrailing,
+            headerLeadingBuilder:
+                headerLeadingBuilder ?? (_) => givenHeaderLeading,
+            headerTrailingBuilder:
+                headerTrailingBuilder ?? (_) => givenHeaderTrailing,
             dayOfWeekBuilder: dayOfWeekBuilder,
             daysOfWeek: givenDayOfWeekMap,
             initialDate: initialDate,
@@ -728,6 +730,8 @@ void main() {
             iconPadding: givenIconPadding,
             onMonthChanged: onMonthChanged,
             onDayChanged: onDayChanged,
+            onNextMonth: onNextMonth,
+            onPreviousMonth: onPreviousMonth,
             pageChangeDuration: const Duration(milliseconds: 100),
             pageChangeCurve: Curves.bounceIn,
             showSixWeeksForEveryMonth: false,
@@ -750,6 +754,18 @@ void main() {
     // given
     final givenInitialDate = DateTime(2000, 1, 5);
 
+    bool? actualHeaderTrailingEnabled;
+    Widget givenHeaderTrailingBuilder(bool enabled) {
+      actualHeaderTrailingEnabled = enabled;
+      return givenHeaderTrailing;
+    }
+
+    bool? actualHeaderLeadingEnabled;
+    Widget givenHeaderLeadingBuilder(bool enabled) {
+      actualHeaderLeadingEnabled = enabled;
+      return givenHeaderLeading;
+    }
+
     // when
     await tester.pumpWidget(
       MaterialApp(
@@ -758,8 +774,8 @@ void main() {
             initialDate: givenInitialDate,
             dayBuilder: dayBuilder,
             headerBuilder: headerTitleBuilder,
-            headerLeading: givenHeaderLeading,
-            headerTrailing: givenHeaderTrailing,
+            headerLeadingBuilder: givenHeaderLeadingBuilder,
+            headerTrailingBuilder: givenHeaderTrailingBuilder,
             dayOfWeekBuilder: dayOfWeekBuilder,
             daysOfWeek: givenDayOfWeekMap,
           ),
@@ -774,11 +790,13 @@ void main() {
             widget is CalendarHeader &&
             widget.onPressedNext != null &&
             widget.onPressedPrevious != null &&
-            widget.showFocusedBorder == false &&
+            !widget.showFocusedBorder &&
             widget.focusedBorderStyle == const FocusedBorderStyle() &&
             widget.headerPadding ==
                 const EdgeInsets.symmetric(horizontal: 3.0) &&
-            widget.iconPadding == const EdgeInsets.all(8),
+            widget.iconPadding == const EdgeInsets.all(8) &&
+            widget.iconLeft == givenHeaderLeading &&
+            widget.iconRight == givenHeaderTrailing,
       ),
       findsOneWidget,
     );
@@ -789,12 +807,12 @@ void main() {
             widget.calendarMonth.weeks.length == 6 &&
             widget.daysOfWeek == givenDayOfWeekMap &&
             widget.selectedDate == givenInitialDate &&
-            widget.showFocusedBorder == false &&
+            !widget.showFocusedBorder &&
             widget.focusedBorderStyle == const FocusedBorderStyle() &&
             widget.dayBuilder == dayBuilder &&
             widget.dayOfWeekBuilder == dayOfWeekBuilder &&
             widget.calendarMonth == calendarMonthJanuary2000 &&
-            widget.disableTapOnOutOfRange == true,
+            widget.disableTapOnOutOfRange,
       ),
       findsOneWidget,
     );
@@ -802,6 +820,8 @@ void main() {
       find.byWidgetPredicate((widget) => widget is CalendarPageView),
       findsNothing,
     );
+    expect(actualHeaderLeadingEnabled, isTrue);
+    expect(actualHeaderTrailingEnabled, isTrue);
   });
 
   testWidgets(
@@ -825,8 +845,8 @@ void main() {
           body: AlhCalendar(
             dayBuilder: dayBuilder,
             headerBuilder: headerTitleBuilder,
-            headerLeading: givenHeaderLeading,
-            headerTrailing: givenHeaderTrailing,
+            headerLeadingBuilder: (_) => givenHeaderLeading,
+            headerTrailingBuilder: (_) => givenHeaderTrailing,
             dayOfWeekBuilder: dayOfWeekBuilder,
             daysOfWeek: givenDayOfWeekMap,
             showFocusedBorder: givenShowFocusedBorder,
@@ -839,10 +859,6 @@ void main() {
 
     // then
     final expectedInitialDate = DateTime.now();
-    final expectedDisableNextMonthFromDate =
-        expectedInitialDate.add(const Duration(days: 365 * 10));
-    final expectedDisablePreviousMonthFromDate =
-        expectedInitialDate.subtract(const Duration(days: 365 * 10));
     final expectedHeaderText =
         DateFormat('yyyy-MM-dd').format(expectedInitialDate);
 
@@ -850,10 +866,10 @@ void main() {
       find.byWidgetPredicate(
         (widget) =>
             widget is AlhCalendar &&
-            widget.enableJumpToOtherMonth == true &&
+            widget.enableJumpToOtherMonth &&
             widget.pageChangeCurve == Curves.easeInOut &&
             widget.pageChangeDuration == const Duration(milliseconds: 400) &&
-            widget.selectInitialDate == true,
+            widget.selectInitialDate,
       ),
       findsOneWidget,
     );
@@ -898,9 +914,9 @@ void main() {
             widget.focusedBorderStyle == givenFocusedBorderStyle &&
             widget.minSelectableDate == null &&
             widget.maxSelectableDate == null &&
-            widget.disableTapOnOutOfRange == true &&
-            widget.enableHorizontalSwipe == true &&
-            widget.showSixWeeksForEveryMonth == true &&
+            widget.disableTapOnOutOfRange &&
+            widget.enableHorizontalSwipe &&
+            widget.showSixWeeksForEveryMonth &&
             DateHelper.areDatesEqual(
               date1: widget.selectedDate,
               date2: expectedInitialDate,
@@ -909,14 +925,8 @@ void main() {
               date1: widget.initialDate,
               date2: expectedInitialDate,
             ) &&
-            DateHelper.areDatesEqual(
-              date1: widget.disableNextMonthFromDate,
-              date2: expectedDisableNextMonthFromDate,
-            ) &&
-            DateHelper.areDatesEqual(
-              date1: widget.disablePreviousMonthFromDate,
-              date2: expectedDisablePreviousMonthFromDate,
-            ) &&
+            widget.disableNextMonthFromDate == null &&
+            widget.disablePreviousMonthFromDate == null &&
             widget.dayBuilder == dayBuilder &&
             widget.dayOfWeekBuilder == dayOfWeekBuilder,
       ),
@@ -924,7 +934,7 @@ void main() {
     );
     expect(
       find.byWidgetPredicate(
-        (widget) => widget is TableCell && widget.child is Center,
+        (widget) => widget is Center && widget.child is SizedBox,
       ),
       findsNWidgets(7),
     );
@@ -937,10 +947,6 @@ void main() {
       (WidgetTester tester) async {
     // given
     final givenInitialDate = DateTime(2000, 2, 5);
-    final expectedDisableNextMonthFromDate =
-        givenInitialDate.add(const Duration(days: 365 * 10));
-    final expectedDisablePreviousMonthFromDate =
-        givenInitialDate.subtract(const Duration(days: 365 * 10));
     final expectedHeaderText =
         DateFormat('yyyy-MM-dd').format(givenInitialDate);
 
@@ -957,7 +963,7 @@ void main() {
             widget is AlhCalendar &&
             widget.pageChangeCurve == Curves.bounceIn &&
             widget.pageChangeDuration == const Duration(milliseconds: 100) &&
-            widget.selectInitialDate == false,
+            !widget.selectInitialDate,
       ),
       findsOneWidget,
     );
@@ -983,14 +989,12 @@ void main() {
             widget.daysOfWeek == givenDayOfWeekMap &&
             widget.minSelectableDate == givenMinSelectableDate &&
             widget.maxSelectableDate == givenMaxSelectableDate &&
-            widget.disableTapOnOutOfRange == false &&
-            widget.showSixWeeksForEveryMonth == false &&
-            widget.enableHorizontalSwipe == false &&
+            !widget.disableTapOnOutOfRange &&
+            !widget.showSixWeeksForEveryMonth &&
+            !widget.enableHorizontalSwipe &&
             widget.initialDate == givenInitialDate &&
-            widget.disableNextMonthFromDate ==
-                expectedDisableNextMonthFromDate &&
-            widget.disablePreviousMonthFromDate ==
-                expectedDisablePreviousMonthFromDate &&
+            widget.disableNextMonthFromDate == null &&
+            widget.disablePreviousMonthFromDate == null &&
             widget.selectedDate == null &&
             widget.dayBuilder == dayBuilder &&
             widget.dayOfWeekBuilder == dayOfWeekBuilder,
@@ -1013,6 +1017,46 @@ void main() {
     );
   });
 
+  testWidgets(
+      'GIVEN help widget is pumped with initialDate '
+      'WHEN initialValue is changed to a different date '
+      'THEN should update the calendar view', (WidgetTester tester) async {
+    // given
+    final givenNewInitialDate = DateTime(2000, 1, 5);
+    final givenInitialDate = DateTime(2000, 1, 1);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: _TestWidget(
+            oldValue: givenInitialDate,
+            newValue: givenNewInitialDate,
+            dayBuilder: dayBuilder,
+            headerBuilder: headerTitleBuilder,
+            headerLeading: givenHeaderLeading,
+            headerTrailing: givenHeaderTrailing,
+            dayOfWeekBuilder: dayOfWeekBuilder,
+            daysOfWeek: givenDayOfWeekMap,
+          ),
+        ),
+      ),
+    );
+
+    // when
+    await tester.tap(find.text('click'));
+    await tester.pumpAndSettle();
+
+    // then
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is CalendarPageView &&
+            widget.initialDate == givenNewInitialDate,
+      ),
+      findsOneWidget,
+    );
+  });
+
   group('#maximum and minimum MonthDate', () {
     testWidgets(
         'GIVEN initialDate is maximum and minimum MonthDate '
@@ -1024,12 +1068,26 @@ void main() {
       final givenDisableNextMonthFromDate = DateTime(2000, 01);
       final givenDisablePreviousMonthFromDate = DateTime(2000, 01);
 
+      bool? actualHeaderTrailingEnabled;
+      Widget givenHeaderTrailingBuilder(bool enabled) {
+        actualHeaderTrailingEnabled = enabled;
+        return givenHeaderTrailing;
+      }
+
+      bool? actualHeaderLeadingEnabled;
+      Widget givenHeaderLeadingBuilder(bool enabled) {
+        actualHeaderLeadingEnabled = enabled;
+        return givenHeaderLeading;
+      }
+
       // when
       await pumpWidgetAndSettle(
         tester,
         initialDate: givenInitialDate,
         disableNextMonthFromDate: givenDisableNextMonthFromDate,
         disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+        headerLeadingBuilder: givenHeaderLeadingBuilder,
+        headerTrailingBuilder: givenHeaderTrailingBuilder,
       );
 
       // then
@@ -1038,7 +1096,9 @@ void main() {
           (widget) =>
               widget is CalendarHeader &&
               widget.onPressedNext == null &&
-              widget.onPressedPrevious == null,
+              widget.onPressedPrevious == null &&
+              widget.iconLeft == givenHeaderLeading &&
+              widget.iconRight == givenHeaderTrailing,
         ),
         findsOneWidget,
       );
@@ -1061,6 +1121,8 @@ void main() {
         ),
         findsOneWidget,
       );
+      expect(actualHeaderLeadingEnabled, isFalse);
+      expect(actualHeaderTrailingEnabled, isFalse);
     });
 
     testWidgets(
@@ -1068,11 +1130,13 @@ void main() {
         'WHEN headerTrailing is tapped '
         'THEN calendarMonth should change to next calendarMonth and call onMonthChanged',
         (WidgetTester tester) async {
+      CalendarMonth? givenPreviousCalledMonth;
+      CalendarMonth? givenNextCalledMonth;
       final givenInitialDate = DateTime(2000, 1, 5);
       final givenDisableNextMonthFromDate = DateTime(2000, 03);
 
       late DateTime currentMonthDate;
-      bool callBackMonthHasChanged = false;
+      var callBackMonthHasChanged = false;
 
       void givenOnMonthChanged(month) {
         callBackMonthHasChanged = true;
@@ -1084,6 +1148,8 @@ void main() {
         initialDate: givenInitialDate,
         disableNextMonthFromDate: givenDisableNextMonthFromDate,
         onMonthChanged: givenOnMonthChanged,
+        onNextMonth: (month) => givenNextCalledMonth = month,
+        onPreviousMonth: (month) => givenPreviousCalledMonth = month,
       );
 
       // when
@@ -1100,7 +1166,9 @@ void main() {
         findsOneWidget,
       );
       expect(callBackMonthHasChanged, isTrue);
-      expect(currentMonthDate, calendarMonthFebruary2000.month);
+      expect(currentMonthDate, equals(calendarMonthFebruary2000.month));
+      expect(givenNextCalledMonth!.month, equals(DateTime(2000, 02)));
+      expect(givenPreviousCalledMonth, isNull);
     });
 
     testWidgets(
@@ -1109,11 +1177,13 @@ void main() {
         'THEN calendarMonth should change to previous calendarMonth and call onMonthChanged',
         (WidgetTester tester) async {
       // given
+      CalendarMonth? givenPreviousCalledMonth;
+      CalendarMonth? givenNextCalledMonth;
       final givenInitialDate = DateTime(2000, 1, 5);
       final givenDisablePreviousMonthFromDate = DateTime(1999, 12);
 
       late DateTime currentMonthDate;
-      bool callBackMonthHasChanged = false;
+      var callBackMonthHasChanged = false;
 
       void givenOnMonthChanged(month) {
         callBackMonthHasChanged = true;
@@ -1125,6 +1195,8 @@ void main() {
         initialDate: givenInitialDate,
         disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
         onMonthChanged: givenOnMonthChanged,
+        onNextMonth: (month) => givenNextCalledMonth = month,
+        onPreviousMonth: (month) => givenPreviousCalledMonth = month,
       );
 
       // when
@@ -1141,7 +1213,9 @@ void main() {
         findsOneWidget,
       );
       expect(callBackMonthHasChanged, isTrue);
-      expect(currentMonthDate, calendarMonthDecember1999.month);
+      expect(currentMonthDate, equals(calendarMonthDecember1999.month));
+      expect(givenPreviousCalledMonth!.month, equals(DateTime(1999, 12)));
+      expect(givenNextCalledMonth, isNull);
     });
   });
 
@@ -1154,7 +1228,7 @@ void main() {
       // given
       final givenInitialDate = DateTime(2000, 1, 5);
       late DateTime currentDayDate;
-      bool callBackDayHasChanged = false;
+      var callBackDayHasChanged = false;
 
       void givenOnDayChanged(day) {
         callBackDayHasChanged = true;
@@ -1185,7 +1259,7 @@ void main() {
         findsOneWidget,
       );
       expect(callBackDayHasChanged, isTrue);
-      expect(currentDayDate, DateTime(1999, 12, 27));
+      expect(currentDayDate, equals(DateTime(1999, 12, 27)));
     });
 
     testWidgets(
@@ -1279,7 +1353,7 @@ void main() {
     });
 
     testWidgets(
-        'Given initialDate = enableJumpToOtherMonth = false'
+        'Given initialDate = enableJumpToOtherMonth = false '
         'WHEN day in previous month is tapped '
         'THEN should not jump to previous month', (WidgetTester tester) async {
       // given
@@ -1310,4 +1384,171 @@ void main() {
       );
     });
   });
+
+  group('AlhCalendarController.jumpToMonth', () {
+    Future<void> pumpWithController(
+      WidgetTester tester, {
+      required AlhCalendarController controller,
+      required DateTime initialDate,
+      DateTime? disablePreviousMonthFromDate,
+      DateTime? disableNextMonthFromDate,
+      ValueChanged<DateTime>? onMonthChanged,
+    }) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: AlhCalendar(
+              controller: controller,
+              initialDate: initialDate,
+              disablePreviousMonthFromDate: disablePreviousMonthFromDate,
+              disableNextMonthFromDate: disableNextMonthFromDate,
+              dayBuilder: dayBuilder,
+              headerBuilder: headerTitleBuilder,
+              headerLeadingBuilder: (_) => givenHeaderLeading,
+              headerTrailingBuilder: (_) => givenHeaderTrailing,
+              dayOfWeekBuilder: dayOfWeekBuilder,
+              daysOfWeek: givenDayOfWeekMap,
+              onMonthChanged: onMonthChanged,
+              pageChangeDuration: const Duration(milliseconds: 10),
+              pageChangeCurve: Curves.linear,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets(
+        'GIVEN attached controller '
+        'WHEN jumpToMonth is called with a future month '
+        'THEN should animate to that month, clear selection and emit '
+        'onMonthChanged', (WidgetTester tester) async {
+      // given
+      final controller = AlhCalendarController();
+      addTearDown(controller.dispose);
+      final givenInitialDate = DateTime(2000, 1, 15);
+      final givenTarget = DateTime(2000, 5, 1);
+
+      DateTime? actualMonthChanged;
+
+      await pumpWithController(
+        tester,
+        controller: controller,
+        initialDate: givenInitialDate,
+        onMonthChanged: (date) => actualMonthChanged = date,
+      );
+
+      // when
+      final jumpFuture = controller.jumpToMonthOf(givenTarget);
+      await tester.pumpAndSettle();
+      await jumpFuture;
+
+      // then
+      expect(controller.isAttached, isTrue);
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is CalendarBody &&
+              widget.calendarMonth.month.year == givenTarget.year &&
+              widget.calendarMonth.month.month == givenTarget.month &&
+              widget.selectedDate == null,
+        ),
+        findsOneWidget,
+      );
+      expect(actualMonthChanged?.year, equals(givenTarget.year));
+      expect(actualMonthChanged?.month, equals(givenTarget.month));
+    });
+
+    testWidgets(
+        'GIVEN disableNextMonthFromDate set '
+        'WHEN jumpToMonth is called with a target beyond the limit '
+        'THEN should clamp to the boundary month', (WidgetTester tester) async {
+      // given
+      final controller = AlhCalendarController();
+      addTearDown(controller.dispose);
+      final givenInitialDate = DateTime(2000, 1, 15);
+      final givenMaxMonth = DateTime(2000, 6);
+      final givenTarget = DateTime(2001, 12);
+
+      DateTime? actualMonthChanged;
+
+      await pumpWithController(
+        tester,
+        controller: controller,
+        initialDate: givenInitialDate,
+        disableNextMonthFromDate: givenMaxMonth,
+        onMonthChanged: (date) => actualMonthChanged = date,
+      );
+
+      // when
+      final jumpFuture = controller.jumpToMonthOf(givenTarget);
+      await tester.pumpAndSettle();
+      await jumpFuture;
+
+      // then
+      expect(actualMonthChanged?.year, equals(givenMaxMonth.year));
+      expect(actualMonthChanged?.month, equals(givenMaxMonth.month));
+    });
+  });
+}
+
+class _TestWidget extends StatefulWidget {
+  final DateTime newValue;
+  final DateTime oldValue;
+
+  final Widget Function(
+    CalendarDayBuilderModel calendarDayBuilderModel,
+  ) dayBuilder;
+  final Text Function(DateTime date) headerBuilder;
+  final Widget headerLeading;
+  final Widget headerTrailing;
+  final Widget Function(String dayOfWeek, bool isWeekEnd) dayOfWeekBuilder;
+  final Map<DayOfWeek, String> daysOfWeek;
+
+  const _TestWidget({
+    required this.oldValue,
+    required this.newValue,
+    required this.dayBuilder,
+    required this.headerBuilder,
+    required this.headerLeading,
+    required this.headerTrailing,
+    required this.dayOfWeekBuilder,
+    required this.daysOfWeek,
+  });
+
+  @override
+  State<_TestWidget> createState() => _TestWidgetState();
+}
+
+class _TestWidgetState extends State<_TestWidget> {
+  late DateTime currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    currentValue = widget.oldValue;
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          AlhCalendar(
+            initialDate: currentValue,
+            dayBuilder: widget.dayBuilder,
+            headerBuilder: widget.headerBuilder,
+            headerLeadingBuilder: (_) => widget.headerLeading,
+            headerTrailingBuilder: (_) => widget.headerTrailing,
+            dayOfWeekBuilder: widget.dayOfWeekBuilder,
+            daysOfWeek: widget.daysOfWeek,
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                currentValue = widget.newValue;
+              });
+            },
+            child: const Text('click'),
+          ),
+        ],
+      );
 }

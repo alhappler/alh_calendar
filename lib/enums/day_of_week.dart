@@ -7,7 +7,5 @@ enum DayOfWeek {
   saturday,
   sunday;
 
-  bool get isWeekend {
-    return this == DayOfWeek.saturday || this == DayOfWeek.sunday;
-  }
+  bool get isWeekend => this == DayOfWeek.saturday || this == DayOfWeek.sunday;
 }

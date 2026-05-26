@@ -27,6 +27,7 @@ void main() {
           ),
         ),
       );
+
   testWidgets(
     'GIVEN FocusedBorder is focused and showFocusedBorder is true '
     'WHEN FocusedBorder is pumped '
@@ -49,6 +50,7 @@ void main() {
         find.byWidgetPredicate(
           (widget) =>
               widget is DecoratedBox &&
+              widget.child == givenChild &&
               widget.decoration is BoxDecoration &&
               (widget.decoration as BoxDecoration).border ==
                   Border.all(
@@ -61,15 +63,6 @@ void main() {
                       givenBorderRadius.bottomLeft.x + givenThickness,
                     ),
                   ),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is Padding &&
-              widget.padding == const EdgeInsets.all(givenThickness) &&
-              widget.child == givenChild,
         ),
         findsOneWidget,
       );
@@ -99,55 +92,8 @@ void main() {
           (widget) =>
               widget is DecoratedBox &&
               widget.decoration is BoxDecoration &&
+              widget.child == givenChild &&
               (widget.decoration as BoxDecoration).border == null,
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is Padding &&
-              widget.padding == const EdgeInsets.all(0) &&
-              widget.child == givenChild,
-        ),
-        findsOneWidget,
-      );
-    },
-  );
-
-  testWidgets(
-    'GIVEN FocusedBorder is not in focus and showFocusedBorder is true '
-    'WHEN FocusedBorder is pumped '
-    'THEN show expected Widgets',
-    (tester) async {
-      // given
-
-      // when
-      await pumpWidget(
-        tester,
-        showFocusedBorder: true,
-        builder: (onFocusChanged) {
-          onFocusChanged(false);
-          return givenChild;
-        },
-      );
-
-      // then
-      expect(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is DecoratedBox &&
-              widget.decoration is BoxDecoration &&
-              (widget.decoration as BoxDecoration).border == null,
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is Padding &&
-              widget.padding == const EdgeInsets.all(givenThickness) &&
-              widget.child == givenChild,
         ),
         findsOneWidget,
       );

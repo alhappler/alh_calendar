@@ -500,23 +500,19 @@ void main() {
 
   Padding dayBuilder(
     CalendarDayBuilderModel calendarDayBuilderModel,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: Text(
-        '${calendarDayBuilderModel.dateTime!.month} ${calendarDayBuilderModel.dateTime!.day}',
-      ),
-    );
-  }
+  ) =>
+      Padding(
+        padding: const EdgeInsets.all(2),
+        child: Text(
+          '${calendarDayBuilderModel.dateTime!.month} ${calendarDayBuilderModel.dateTime!.day}',
+        ),
+      );
 
-  TableCell dayOfWeekBuilder(
+  Widget dayOfWeekBuilder(
     String dayOfWeek,
     bool isWeekEnd,
-  ) {
-    return const TableCell(
-      child: Center(),
-    );
-  }
+  ) =>
+      const Center(child: SizedBox());
 
   final givenDayOfWeekMap = {
     DayOfWeek.monday: 'Mon',
@@ -544,6 +540,8 @@ void main() {
     WidgetTester tester, {
     DateTime? initialDate,
     bool? enableHorizontalSwipe,
+    DateTime? disableNextMonthFromDate,
+    DateTime? disablePreviousMonthFromDate,
     void Function(PageController)? onCreatedPageView,
     void Function({
       required int index,
@@ -566,8 +564,8 @@ void main() {
             daysOfWeek: givenDayOfWeekMap,
             minSelectableDate: givenMinSelectableDate,
             maxSelectableDate: givenMaxSelectableDate,
-            disableNextMonthFromDate: givenDisableNextMonthFromDate,
-            disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            disableNextMonthFromDate: disableNextMonthFromDate,
+            disablePreviousMonthFromDate: disablePreviousMonthFromDate,
             onCreatedPageView: onCreatedPageView ?? (_) {},
             disableTapOnOutOfRange: givenDisableTapOnOutOfRange,
             onChangeMonth: handleChangeMonth ?? givenHandleChangeMonth,
@@ -579,7 +577,7 @@ void main() {
   }
 
   testWidgets(
-      'GIVEN initialDate = DateTime(2000, 1, 5) '
+      'GIVEN initialDate = DateTime(2000, 1, 5),disableNextMonthFromDate and disablePreviousMonthFromDate '
       'WHEN AlhCalendar is pumped '
       'THEN should show expected structure with expected CalendarMonth',
       (WidgetTester tester) async {
@@ -590,6 +588,8 @@ void main() {
     await pumpWidget(
       tester,
       initialDate: givenInitialDate,
+      disableNextMonthFromDate: givenDisableNextMonthFromDate,
+      disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
     );
 
     // then
@@ -598,6 +598,7 @@ void main() {
         (widget) =>
             widget is PageView &&
             widget.childrenDelegate.estimatedChildCount == givenItemCount &&
+            widget.controller!.initialPage == 1 &&
             widget.physics == null,
       ),
       findsOneWidget,
@@ -620,6 +621,190 @@ void main() {
     );
   });
 
+  testWidgets(
+      'GIVEN help widget is pumped with disablePreviousMonthFromDate '
+      'WHEN disablePreviousMonthFromDate is changed to a different date '
+      'THEN should update the calendar view', (WidgetTester tester) async {
+    // given
+    final givenNewDisablePreviousMonthFromDate = DateTime(2000, 1, 10);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: _TestWidget(
+            oldeDisablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            newDisablePreviousMonthFromDate:
+                givenNewDisablePreviousMonthFromDate,
+            oldDisableNextMonthFromDate: givenDisableNextMonthFromDate,
+            newDisableNextMonthFromDate: givenDisableNextMonthFromDate,
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
+            oldInitialDate: givenInitialDate,
+            newInitialDate: givenInitialDate,
+            showSixWeeksForEveryMonth: givenShowSixWeeksForEveryMonth,
+            onSelectDay: givenOnSelectDay,
+            disableTapOnOutOfRange: givenDisableTapOnOutOfRange,
+            disableNextMonthFromDate: givenDisableNextMonthFromDate,
+            disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            enableHorizontalSwipe: true,
+            dayBuilder: dayBuilder,
+            dayOfWeekBuilder: dayOfWeekBuilder,
+            daysOfWeek: givenDayOfWeekMap,
+            onCreatedPageView: (_) {},
+            onChangeMonth: givenHandleChangeMonth,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // when
+    await tester.tap(find.text('click'));
+    await tester.pumpAndSettle();
+
+    // then
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is PageView &&
+            widget.controller!.initialPage == 1 &&
+            widget.childrenDelegate.estimatedChildCount == 2,
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+      'GIVEN help widget is pumped with disableNextMonthFromDate '
+      'WHEN disableNextMonthFromDate is changed to a different date '
+      'THEN should update the calendar view', (WidgetTester tester) async {
+    // given
+    final givenNewDisableNextMonthFromDate = DateTime(2000, 3, 10);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: _TestWidget(
+            oldeDisablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            newDisablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            oldDisableNextMonthFromDate: givenDisableNextMonthFromDate,
+            newDisableNextMonthFromDate: givenNewDisableNextMonthFromDate,
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
+            oldInitialDate: givenInitialDate,
+            newInitialDate: givenInitialDate,
+            showSixWeeksForEveryMonth: givenShowSixWeeksForEveryMonth,
+            onSelectDay: givenOnSelectDay,
+            disableTapOnOutOfRange: givenDisableTapOnOutOfRange,
+            disableNextMonthFromDate: givenDisableNextMonthFromDate,
+            disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            enableHorizontalSwipe: true,
+            dayBuilder: dayBuilder,
+            dayOfWeekBuilder: dayOfWeekBuilder,
+            daysOfWeek: givenDayOfWeekMap,
+            onCreatedPageView: (_) {},
+            onChangeMonth: givenHandleChangeMonth,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // when
+    await tester.tap(find.text('click'));
+    await tester.pumpAndSettle();
+
+    // then
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is PageView &&
+            widget.controller!.initialPage == 1 &&
+            widget.childrenDelegate.estimatedChildCount == 4,
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+      'GIVEN help widget is pumped with initialDate '
+      'WHEN initialDate is changed to a different date '
+      'THEN should update the calendar view', (WidgetTester tester) async {
+    // given
+    final givenNewInitialDate = DateTime(2000, 3, 10);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: _TestWidget(
+            oldeDisablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            newDisablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            oldDisableNextMonthFromDate: givenDisableNextMonthFromDate,
+            newDisableNextMonthFromDate: givenDisableNextMonthFromDate,
+            showFocusedBorder: givenShowFocusedBorder,
+            focusedBorderStyle: givenFocusedBorderStyle,
+            oldInitialDate: givenInitialDate,
+            newInitialDate: givenNewInitialDate,
+            showSixWeeksForEveryMonth: givenShowSixWeeksForEveryMonth,
+            onSelectDay: givenOnSelectDay,
+            disableTapOnOutOfRange: givenDisableTapOnOutOfRange,
+            disableNextMonthFromDate: givenDisableNextMonthFromDate,
+            disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
+            enableHorizontalSwipe: true,
+            dayBuilder: dayBuilder,
+            dayOfWeekBuilder: dayOfWeekBuilder,
+            daysOfWeek: givenDayOfWeekMap,
+            onCreatedPageView: (_) {},
+            onChangeMonth: givenHandleChangeMonth,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // when
+    await tester.tap(find.text('click'));
+    await tester.pumpAndSettle();
+
+    // then
+    expect(
+      find.byWidgetPredicate(
+          (widget) => widget is Text && widget.data == '3 10'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+      'GIVEN initialDate = DateTime(2000, 1, 5) '
+      'WHEN AlhCalendar is pumped '
+      'THEN should show expected structure with expected CalendarMonth',
+      (WidgetTester tester) async {
+    // given
+
+    // when
+    await pumpWidget(
+      tester,
+      initialDate: givenInitialDate,
+    );
+
+    // then
+    // 20 years * 12 months + 1 for the current month
+    const expectedItemCount = 241;
+    // 10 years * 12 months for the current month
+    const expectedInitialPageIndex = 120;
+
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is PageView &&
+            widget.controller!.initialPage == expectedInitialPageIndex &&
+            widget.childrenDelegate.estimatedChildCount == expectedItemCount &&
+            widget.physics == null,
+      ),
+      findsOneWidget,
+    );
+  });
+
   group('onHorizontalDragEnd', () {
     testWidgets(
         'GIVEN initialDate and handleChangeMonth '
@@ -630,7 +815,7 @@ void main() {
       late int currentIndex;
       late DateTime currentMonthDate;
 
-      bool callBackMonthHasChanged = false;
+      var callBackMonthHasChanged = false;
       void givenHandleChangeMonth({index, newMonthDate}) {
         callBackMonthHasChanged = true;
         currentIndex = index;
@@ -640,6 +825,8 @@ void main() {
       await pumpWidget(
         tester,
         initialDate: givenInitialDate,
+        disableNextMonthFromDate: givenDisableNextMonthFromDate,
+        disablePreviousMonthFromDate: givenDisablePreviousMonthFromDate,
         handleChangeMonth: givenHandleChangeMonth,
       );
 
@@ -752,4 +939,110 @@ void main() {
       expect(pageController, isA<PageController>());
     });
   });
+}
+
+class _TestWidget extends StatefulWidget {
+  final DateTime oldeDisablePreviousMonthFromDate;
+  final DateTime newDisablePreviousMonthFromDate;
+  final DateTime oldDisableNextMonthFromDate;
+  final DateTime newDisableNextMonthFromDate;
+  final bool enableHorizontalSwipe;
+  final DateTime oldInitialDate;
+  final DateTime newInitialDate;
+  final bool showSixWeeksForEveryMonth;
+  final void Function(DateTime) onSelectDay;
+  final Widget Function(CalendarDayBuilderModel) dayBuilder;
+  final Widget Function(String, bool) dayOfWeekBuilder;
+  final Map<DayOfWeek, String> daysOfWeek;
+  final DateTime disableNextMonthFromDate;
+  final DateTime disablePreviousMonthFromDate;
+  final bool disableTapOnOutOfRange;
+  final void Function({
+    required int index,
+    required DateTime newMonthDate,
+  }) onChangeMonth;
+  final void Function(PageController) onCreatedPageView;
+  final bool showFocusedBorder;
+  final FocusedBorderStyle focusedBorderStyle;
+
+  const _TestWidget({
+    required this.enableHorizontalSwipe,
+    required this.oldInitialDate,
+    required this.newInitialDate,
+    required this.showSixWeeksForEveryMonth,
+    required this.onSelectDay,
+    required this.dayBuilder,
+    required this.dayOfWeekBuilder,
+    required this.daysOfWeek,
+    required this.disableNextMonthFromDate,
+    required this.disablePreviousMonthFromDate,
+    required this.disableTapOnOutOfRange,
+    required this.onChangeMonth,
+    required this.onCreatedPageView,
+    required this.showFocusedBorder,
+    required this.focusedBorderStyle,
+    required this.oldeDisablePreviousMonthFromDate,
+    required this.newDisablePreviousMonthFromDate,
+    required this.oldDisableNextMonthFromDate,
+    required this.newDisableNextMonthFromDate,
+  });
+
+  @override
+  State<_TestWidget> createState() => _TestWidgetState();
+}
+
+class _TestWidgetState extends State<_TestWidget> {
+  late DateTime currentDisableNextMonthFromDate;
+  late DateTime currentDisablePreviousMonthFromDate;
+  late DateTime currentInitialDate;
+
+  @override
+  void initState() {
+    super.initState();
+    currentDisableNextMonthFromDate = widget.oldDisableNextMonthFromDate;
+    currentDisablePreviousMonthFromDate =
+        widget.oldeDisablePreviousMonthFromDate;
+    currentInitialDate = widget.oldInitialDate;
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          SizedBox(
+            height: 400,
+            width: 400,
+            child: CalendarPageView(
+              disableNextMonthFromDate: currentDisableNextMonthFromDate,
+              disablePreviousMonthFromDate: currentDisablePreviousMonthFromDate,
+              enableHorizontalSwipe: widget.enableHorizontalSwipe,
+              initialDate: currentInitialDate,
+              showSixWeeksForEveryMonth: widget.showSixWeeksForEveryMonth,
+              onSelectDay: widget.onSelectDay,
+              dayBuilder: widget.dayBuilder,
+              dayOfWeekBuilder: widget.dayOfWeekBuilder,
+              daysOfWeek: widget.daysOfWeek,
+              selectedDate: null,
+              minSelectableDate: null,
+              maxSelectableDate: null,
+              disableTapOnOutOfRange: widget.disableTapOnOutOfRange,
+              onChangeMonth: widget.onChangeMonth,
+              onCreatedPageView: widget.onCreatedPageView,
+              showFocusedBorder: widget.showFocusedBorder,
+              focusedBorderStyle: widget.focusedBorderStyle,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                currentDisableNextMonthFromDate =
+                    widget.newDisableNextMonthFromDate;
+                currentDisablePreviousMonthFromDate =
+                    widget.newDisablePreviousMonthFromDate;
+                currentInitialDate = widget.newInitialDate;
+              });
+            },
+            child: const Text('click'),
+          ),
+        ],
+      );
 }

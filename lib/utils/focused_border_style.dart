@@ -10,10 +10,10 @@ class FocusedBorderStyle {
   final Color color;
 
   /// Radius of the focus border corners for the header.
-  final BorderRadiusGeometry headerBorderRadius;
+  final BorderRadius headerBorderRadius;
 
   /// Radius of the focus border corners for the days.
-  final BorderRadiusGeometry daysBorderRadius;
+  final BorderRadius daysBorderRadius;
 
   const FocusedBorderStyle({
     this.thickness = 2.0,

@@ -18,15 +18,14 @@ class CalendarMonth {
   }) : assert(weeks.length == 5 || weeks.length == 6);
 
   @override
-  bool operator ==(Object other) {
-    return (other is CalendarMonth) &&
-        other.month == month &&
-        weeks.length == other.weeks.length &&
-        _isWeekEqual(
-          calendarWeek: weeks,
-          other: other.weeks,
-        );
-  }
+  bool operator ==(Object other) =>
+      (other is CalendarMonth) &&
+      other.month == month &&
+      weeks.length == other.weeks.length &&
+      _isWeekEqual(
+        calendarWeek: weeks,
+        other: other.weeks,
+      );
 
   @override
   int get hashCode => month.hashCode;
@@ -35,7 +34,7 @@ class CalendarMonth {
     required List<CalendarWeek> calendarWeek,
     required List<CalendarWeek> other,
   }) {
-    for (int week = 0; week < calendarWeek.length; week++) {
+    for (var week = 0; week < calendarWeek.length; week++) {
       if (calendarWeek[week] != other[week]) {
         return false;
       }

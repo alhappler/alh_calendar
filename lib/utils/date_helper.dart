@@ -7,10 +7,9 @@ class DateHelper {
   static bool isMaximumMonthDateReached({
     required DateTime maxSelectableDate,
     required DateTime currentDate,
-  }) {
-    return currentDate.year >= maxSelectableDate.year &&
-        currentDate.month >= maxSelectableDate.month;
-  }
+  }) =>
+      currentDate.year >= maxSelectableDate.year &&
+      currentDate.month >= maxSelectableDate.month;
 
   /// Checks if minimum month has been reached.
   ///
@@ -19,10 +18,9 @@ class DateHelper {
   static bool isMinimumMonthDateReached({
     required DateTime minimumMonthDate,
     required DateTime currentDate,
-  }) {
-    return currentDate.year <= minimumMonthDate.year &&
-        currentDate.month <= minimumMonthDate.month;
-  }
+  }) =>
+      currentDate.year <= minimumMonthDate.year &&
+      currentDate.month <= minimumMonthDate.month;
 
   /// Checks if a given day is out of Range
   ///
@@ -72,4 +70,14 @@ class DateHelper {
         (endDate.year - startDate.year) * 12 + endDate.month - startDate.month;
     return monthsDifference.abs();
   }
+
+  /// Calculates the signed difference in months from [startDate] to [endDate].
+  ///
+  /// Positive if [endDate] is after [startDate], negative if before.
+  /// Day of month is ignored.
+  static int getSignedMonthDifference({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) =>
+      (endDate.year - startDate.year) * 12 + endDate.month - startDate.month;
 }

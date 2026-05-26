@@ -31,31 +31,27 @@ void main() {
 
   Padding dayBuilder(
     CalendarDayBuilderModel calendarDayBuilderModel,
-  ) {
-    return const Padding(
-      padding: EdgeInsets.all(7.5),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.red,
+  ) =>
+      const Padding(
+        padding: EdgeInsets.all(7.5),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.red,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  TableCell dayOfWeekBuilder(
+  Widget dayOfWeekBuilder(
     String dayOfWeek,
     bool isWeekEnd,
-  ) {
-    return TableCell(
-      child: Center(
+  ) =>
+      Center(
         child: Text(
           dayOfWeek,
           style: TextStyle(color: isWeekEnd ? Colors.green : Colors.redAccent),
         ),
-      ),
-    );
-  }
+      );
 
   Future<void> pumpWidget({
     required WidgetTester tester,
@@ -99,11 +95,15 @@ void main() {
     );
 
     // then
-    late int expectedCalendarCellCount = 0;
+    late var expectedCalendarCellCount = 0;
     for (final week in givenCalendarMonth.weeks) {
       expectedCalendarCellCount += week.days.length;
     }
 
+    expect(
+        find.byWidgetPredicate(
+            (widget) => widget is Focus && widget.child is Padding),
+        findsOneWidget);
     expect(
       find.byWidgetPredicate(
         (widget) =>
@@ -138,8 +138,8 @@ void main() {
             widget is CalendarCell &&
             widget.showFocusedBorder == givenShowFocusedBorder &&
             widget.focusedBorderStyle == givenFocusedBorderStyle &&
-            widget.isOutOfRange == false &&
-            widget.isSelected == false &&
+            !widget.isOutOfRange &&
+            !widget.isSelected &&
             widget.dayBuilder == dayBuilder &&
             widget.onTap != null,
       ),
@@ -147,7 +147,7 @@ void main() {
     );
     expect(
       find.byWidgetPredicate(
-        (widget) => widget is CalendarCell && widget.isSelected == true,
+        (widget) => widget is CalendarCell && widget.isSelected,
       ),
       findsNothing,
     );
@@ -178,7 +178,7 @@ void main() {
         (widget) =>
             widget is CalendarCell &&
             widget.date == DateTime(2022, 9, 4) &&
-            widget.isOutOfRange == true &&
+            widget.isOutOfRange &&
             widget.onTap == null,
       ),
       findsOneWidget,
@@ -187,8 +187,8 @@ void main() {
       find.byWidgetPredicate(
         (widget) =>
             widget is CalendarCell &&
-            widget.isSelected == true &&
-            widget.isOutOfRange == false &&
+            widget.isSelected &&
+            !widget.isOutOfRange &&
             widget.onTap != null &&
             widget.date == givenSelectedDate,
       ),
@@ -220,7 +220,7 @@ void main() {
         (widget) =>
             widget is CalendarCell &&
             widget.date == DateTime(2022, 9, 4) &&
-            widget.isOutOfRange == true &&
+            widget.isOutOfRange &&
             widget.onTap != null,
       ),
       findsOneWidget,
@@ -232,7 +232,7 @@ void main() {
       'WHEN CalendarBody is pumped and CalendarCell out of range is tapped '
       'THEN counter should be 1', (WidgetTester tester) async {
     // given
-    int counter = 0;
+    var counter = 0;
 
     final givenMinSelectableDate = DateTime(2022, 10, 5);
     final givenMaxSelectableDate = DateTime(2022, 10, 8);
@@ -252,7 +252,7 @@ void main() {
         (widget) =>
             widget is CalendarCell &&
             widget.date == DateTime(2022, 10, 6) &&
-            widget.isOutOfRange == false,
+            !widget.isOutOfRange,
       ),
     );
 

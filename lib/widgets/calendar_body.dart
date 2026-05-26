@@ -67,40 +67,41 @@ class CalendarBody extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Card(
-        elevation: 0,
-        child: Table(
-          children: [
-            TableRow(
-              children: List.generate(
-                DateTime.daysPerWeek,
-                (day) {
-                  final dayValue = daysOfWeek.entries.elementAt(day);
+  Widget build(BuildContext context) => Focus(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Card(
+            elevation: 0,
+            child: Table(
+              children: [
+                TableRow(
+                  children: List.generate(
+                    DateTime.daysPerWeek,
+                    (day) {
+                      final dayValue = daysOfWeek.entries.elementAt(day);
 
-                  return dayOfWeekBuilder(
-                    dayValue.value,
-                    dayValue.key.isWeekend,
-                  );
-                },
-              ),
+                      return TableCell(
+                          child: dayOfWeekBuilder(
+                        dayValue.value,
+                        dayValue.key.isWeekend,
+                      ));
+                    },
+                  ),
+                ),
+                ...CalendarTableHelper.buildCalendarTableRow(
+                  showFocusedBorder: showFocusedBorder,
+                  focusedBorderStyle: focusedBorderStyle,
+                  calendarMonth: calendarMonth,
+                  selectedDate: selectedDate,
+                  dayBuilder: dayBuilder,
+                  onSelectDay: onSelectDay,
+                  disableTapOnOutOfRange: disableTapOnOutOfRange,
+                  minSelectableDate: minSelectableDate,
+                  maxSelectableDate: maxSelectableDate,
+                ),
+              ],
             ),
-            ...CalendarTableHelper.buildCalendarTableRow(
-              showFocusedBorder: showFocusedBorder,
-              focusedBorderStyle: focusedBorderStyle,
-              calendarMonth: calendarMonth,
-              selectedDate: selectedDate,
-              dayBuilder: dayBuilder,
-              onSelectDay: onSelectDay,
-              disableTapOnOutOfRange: disableTapOnOutOfRange,
-              minSelectableDate: minSelectableDate,
-              maxSelectableDate: maxSelectableDate,
-            ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 }

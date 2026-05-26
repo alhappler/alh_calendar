@@ -52,7 +52,7 @@ void main() {
     if (firstTableRow.children.length != secondTableRow.children.length) {
       return false;
     } else {
-      for (int cell = 0; cell <= firstTableRow.children.length - 1; cell++) {
+      for (var cell = 0; cell <= firstTableRow.children.length - 1; cell++) {
         if (testSixthRowAndOutOfRange) {
           if (!matchCalendarCellsBySixthRowDisabledAndOutOfRange(
             firstCalendarCell: firstTableRow.children[cell] as CalendarCell,
@@ -75,17 +75,16 @@ void main() {
 
   Padding dayBuilder(
     CalendarDayBuilderModel calendarDayBuilderModel,
-  ) {
-    return const Padding(
-      padding: EdgeInsets.all(7.5),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.red,
+  ) =>
+      const Padding(
+        padding: EdgeInsets.all(7.5),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.red,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   final expectedMonth = DateTime(2022, 9);
   final expectedWeek1 = CalendarWeek(
@@ -351,16 +350,16 @@ void main() {
       );
 
       // then
-      expect(actual.month, expectedMonth);
-      expect(actual.weeks.length, 6);
-      expect(actual.weeks[0] == expectedWeek1, isTrue);
-      expect(actual.weeks[1] == expectedWeek2, isTrue);
-      expect(actual.weeks[2] == expectedWeek3, isTrue);
-      expect(actual.weeks[3] == expectedWeek4, isTrue);
-      expect(actual.weeks[4] == expectedWeek5, isTrue);
+      expect(actual.month, equals(expectedMonth));
+      expect(actual.weeks.length, equals(6));
+      expect(actual.weeks[0], equals(expectedWeek1));
+      expect(actual.weeks[1], equals(expectedWeek2));
+      expect(actual.weeks[2], equals(expectedWeek3));
+      expect(actual.weeks[3], equals(expectedWeek4));
+      expect(actual.weeks[4], equals(expectedWeek5));
       expect(
-        actual.weeks[5] == expectedWeek6,
-        isTrue,
+        actual.weeks[5],
+        equals(expectedWeek6),
       ); // should have only days from next month
     });
 
@@ -380,13 +379,13 @@ void main() {
       );
 
       // then
-      expect(actual.month, expectedMonth);
-      expect(actual.weeks.length, 5);
-      expect(actual.weeks[0] == expectedWeek1, isTrue);
-      expect(actual.weeks[1] == expectedWeek2, isTrue);
-      expect(actual.weeks[2] == expectedWeek3, isTrue);
-      expect(actual.weeks[3] == expectedWeek4, isTrue);
-      expect(actual.weeks[4] == expectedWeek5, isTrue);
+      expect(actual.month, equals(expectedMonth));
+      expect(actual.weeks.length, equals(5));
+      expect(actual.weeks[0], equals(expectedWeek1));
+      expect(actual.weeks[1], equals(expectedWeek2));
+      expect(actual.weeks[2], equals(expectedWeek3));
+      expect(actual.weeks[3], equals(expectedWeek4));
+      expect(actual.weeks[4], equals(expectedWeek5));
     });
 
     test(
@@ -405,8 +404,53 @@ void main() {
 
       // then
       final expectedMonth = DateTime(2022, 10);
-      expect(actual.month, expectedMonth);
-      expect(actual.weeks.length, 6);
+      expect(actual.month, equals(expectedMonth));
+      expect(actual.weeks.length, equals(6));
+    });
+
+    test(
+        'GIVEN a 28-day month starting on Monday (February 2021) '
+        'and forceSixWeekMonth = true '
+        'WHEN buildCurrentCalendarMonth is called '
+        'THEN should pad up to 6 weeks (regression for CalendarMonth assert)',
+        () {
+      // given
+      // Feb 2021: Mon Feb 1 — Sun Feb 28, 28 days, tiles into 4 raw weeks
+      final givenDateTime = DateTime(2021, 2, 1);
+
+      // when
+      final actual = CalendarTableHelper.buildCurrentCalendarMonth(
+        date: givenDateTime,
+        forceSixWeekMonth: true,
+      );
+
+      // then
+      expect(actual.month, equals(DateTime(2021, 2)));
+      expect(actual.weeks.length, equals(6));
+      // first week starts on Feb 1, padded weeks come from March
+      expect(actual.weeks.first.days.first.date, equals(DateTime(2021, 2, 1)));
+      expect(actual.weeks.last.days.last.date.isAfter(DateTime(2021, 2, 28)),
+          isTrue);
+    });
+
+    test(
+        'GIVEN a 28-day month starting on Monday (February 2021) '
+        'and forceSixWeekMonth = false '
+        'WHEN buildCurrentCalendarMonth is called '
+        'THEN should pad up to 5 weeks (regression for CalendarMonth assert)',
+        () {
+      // given
+      final givenDateTime = DateTime(2021, 2, 1);
+
+      // when
+      final actual = CalendarTableHelper.buildCurrentCalendarMonth(
+        date: givenDateTime,
+        forceSixWeekMonth: false,
+      );
+
+      // then
+      expect(actual.month, equals(DateTime(2021, 2)));
+      expect(actual.weeks.length, equals(5));
     });
   });
 
@@ -919,7 +963,7 @@ void main() {
         ],
       );
 
-      final List<TableRow> expectedTableRows = [
+      final expectedTableRows = <TableRow>[
         expectedTableRow1,
         expectedTableRow2,
         expectedTableRow3,
@@ -927,7 +971,7 @@ void main() {
         expectedTableRow5,
         expectedTableRow6,
       ];
-      for (int index = 0; index <= expectedTableRows.length - 1; index++) {
+      for (var index = 0; index <= expectedTableRows.length - 1; index++) {
         expect(
           matchTableRows(
             firstTableRow: actual[index],
@@ -955,8 +999,8 @@ void main() {
 
       // then
       final expectedMonth = DateTime(2022, 10);
-      expect(actual.month, expectedMonth);
-      expect(actual.weeks.length, 6);
+      expect(actual.month, equals(expectedMonth));
+      expect(actual.weeks.length, equals(6));
     });
 
     test(

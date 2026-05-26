@@ -7,7 +7,7 @@ void main() {
         'GIVEN currentDate = 01.2000 and maxSelectableDate = 01.2001 '
         'WHEN .isMaximumMonthDateReached is called '
         'THEN should return false', () {
-      //given
+      // given
       final givenCurrentDate = DateTime(2000, 01);
       final givenMaxSelectableDate = DateTime(2001, 01);
 
@@ -25,7 +25,7 @@ void main() {
         'GIVEN currentDate = 01.2000 and maxSelectableDate = 02.2000 '
         'WHEN .isMaximumMonthDateReached is called '
         'THEN should return false', () {
-      //given
+      // given
       final givenCurrentDate = DateTime(2000, 01);
       final givenMaxSelectableDate = DateTime(2000, 02);
 
@@ -43,7 +43,7 @@ void main() {
         'GIVEN currentDate = 01.2000 and maxSelectableDate = 01.2000 '
         'WHEN .isMaximumMonthDateReached is called '
         'THEN should return true', () {
-      //given
+      // given
       final givenCurrentDate = DateTime(2000, 01);
       final givenMaxSelectableDate = DateTime(2000, 01);
 
@@ -63,7 +63,7 @@ void main() {
         'GIVEN currentDate = 01.2001 and minSelectableDate = 01.2000 '
         'WHEN .isMinimumMonthDateReached is called '
         'THEN should return false', () {
-      //given
+      // given
       final givenCurrentDate = DateTime(2001, 01);
       final givenMinSelectableDate = DateTime(2000, 01);
 
@@ -81,7 +81,7 @@ void main() {
         'GIVEN currentDate = 02.2000 and minSelectableDate = 01.2000 '
         'WHEN .isMinimumMonthDateReached is called '
         'THEN should return false', () {
-      //given
+      // given
       final givenCurrentDate = DateTime(2000, 02);
       final givenMinSelectableDate = DateTime(2000, 01);
 
@@ -99,7 +99,7 @@ void main() {
         'GIVEN currentDate = 01.2000 and minSelectableDate = 01.2000 '
         'WHEN .isMinimumMonthDateReached is called '
         'THEN should return true', () {
-      //given
+      // given
       final givenCurrentDate = DateTime(2000, 01);
       final givenMinSelectableDate = DateTime(2000, 01);
 
@@ -220,7 +220,7 @@ void main() {
 
     test(
         'GIVEN dayDateTime and maxSelectableDate are not null while minSelectableDate is null '
-        'and DayDateTime is after maxSelectableDate'
+        'and DayDateTime is after maxSelectableDate '
         'WHEN .isDayOutOfRange is called '
         'THEN should return true', () {
       // given
@@ -320,7 +320,7 @@ void main() {
           DateHelper.getMonthDifference(startDate: startDate, endDate: endDate);
 
       // then
-      expect(result, 3); // Difference of 3 months
+      expect(result, equals(3));
     });
 
     test(
@@ -336,7 +336,7 @@ void main() {
           DateHelper.getMonthDifference(startDate: startDate, endDate: endDate);
 
       // then
-      expect(result, 3); // Difference of -3 months
+      expect(result, equals(3));
     });
 
     test(
@@ -352,7 +352,63 @@ void main() {
           DateHelper.getMonthDifference(startDate: startDate, endDate: endDate);
 
       // then
-      expect(result, 24);
+      expect(result, equals(24));
+    });
+  });
+
+  group('#getSignedMonthDifference', () {
+    test(
+        'GIVEN endDate after startDate '
+        'WHEN getSignedMonthDifference is called '
+        'THEN should return positive difference in months', () {
+      // given
+      final startDate = DateTime(2020, 1);
+      final endDate = DateTime(2020, 4);
+
+      // when
+      final result = DateHelper.getSignedMonthDifference(
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      // then
+      expect(result, equals(3));
+    });
+
+    test(
+        'GIVEN endDate before startDate '
+        'WHEN getSignedMonthDifference is called '
+        'THEN should return negative difference in months', () {
+      // given
+      final startDate = DateTime(2020, 5);
+      final endDate = DateTime(2020, 2);
+
+      // when
+      final result = DateHelper.getSignedMonthDifference(
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      // then
+      expect(result, equals(-3));
+    });
+
+    test(
+        'GIVEN startDate and endDate are the same month '
+        'WHEN getSignedMonthDifference is called '
+        'THEN should return 0', () {
+      // given
+      final startDate = DateTime(2020, 5, 1);
+      final endDate = DateTime(2020, 5, 28);
+
+      // when
+      final result = DateHelper.getSignedMonthDifference(
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      // then
+      expect(result, equals(0));
     });
   });
 }

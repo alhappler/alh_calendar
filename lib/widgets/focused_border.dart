@@ -52,17 +52,12 @@ class _FocusedBorderState extends State<FocusedBorder> {
           ),
         ),
       ),
-      child: Padding(
-        padding: EdgeInsets.all(
-          widget.showFocusedBorder ? widget.thickness : 0,
-        ),
-        child: child,
-      ),
+      child: child,
     );
   }
 
   BoxBorder? get _border {
-    if (!_isFocused || widget.showFocusedBorder == false) {
+    if (!_isFocused || !widget.showFocusedBorder) {
       return null;
     }
 

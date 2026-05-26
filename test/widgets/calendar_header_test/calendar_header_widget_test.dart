@@ -105,7 +105,7 @@ void main() {
       'WHEN leftIcon is tapped '
       'THEN should call onTap once', (WidgetTester tester) async {
     // given
-    int counter = 0;
+    var counter = 0;
     void givenOnTap() {
       counter++;
     }
@@ -125,7 +125,7 @@ void main() {
       'WHEN rightIcon is tapped '
       'THEN should call onTap once', (WidgetTester tester) async {
     // given
-    int counter = 0;
+    var counter = 0;
     void givenOnTap() {
       counter++;
     }

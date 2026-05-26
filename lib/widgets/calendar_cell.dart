@@ -42,17 +42,21 @@ class CalendarCell extends StatelessWidget {
       isOutOfRange: isOutOfRange,
     );
 
-    return FocusedBorder(
-      showFocusedBorder: showFocusedBorder,
-      color: focusedBorderStyle.color,
-      thickness: focusedBorderStyle.thickness,
-      borderRadius: focusedBorderStyle.daysBorderRadius,
-      builder: (onFocusChange) => InkWell(
-        onFocusChange: onFocusChange,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: onTap,
-        child: dayBuilder(calendarDayBuilderModel),
+    return TableCell(
+      child: FocusedBorder(
+        showFocusedBorder: showFocusedBorder,
+        color: focusedBorderStyle.color,
+        thickness: focusedBorderStyle.thickness,
+        borderRadius: focusedBorderStyle.daysBorderRadius,
+        builder: (onFocusChange) => InkWell(
+          borderRadius:
+              showFocusedBorder ? focusedBorderStyle.daysBorderRadius : null,
+          onFocusChange: onFocusChange,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onTap: onTap,
+          child: dayBuilder(calendarDayBuilderModel),
+        ),
       ),
     );
   }

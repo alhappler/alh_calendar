@@ -92,7 +92,7 @@ void main() {
   });
 
   test(
-      'GIVEN CalendarDay2 and CalendarDay1 where date is equal and dayOfWeek is equal'
+      'GIVEN CalendarDay2 and CalendarDay1 where date is equal and dayOfWeek is equal '
       'but isInCurrentMonth is not '
       'WHEN == is called '
       'THEN should return false', () {

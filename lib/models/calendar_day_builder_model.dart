@@ -30,14 +30,13 @@ class CalendarDayBuilderModel {
   });
 
   @override
-  bool operator ==(Object other) {
-    return (other is CalendarDayBuilderModel) &&
-        other.dateTime == dateTime &&
-        other.isInCurrentMonth == isInCurrentMonth &&
-        other.isSelected == isSelected &&
-        other.isWeekend == isWeekend &&
-        other.isOutOfRange == isOutOfRange;
-  }
+  bool operator ==(Object other) =>
+      (other is CalendarDayBuilderModel) &&
+      other.dateTime == dateTime &&
+      other.isInCurrentMonth == isInCurrentMonth &&
+      other.isSelected == isSelected &&
+      other.isWeekend == isWeekend &&
+      other.isOutOfRange == isOutOfRange;
 
   @override
   int get hashCode => dateTime.hashCode;
