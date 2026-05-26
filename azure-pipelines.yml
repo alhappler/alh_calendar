@@ -26,3 +26,4 @@ jobs:
       sourceCodeDirectory: $(SOURCE_CODE_DIRECTORY)
       monoRepoDirectory: $(MONO_REPO_DIRECTORY)
       cacheKey: $(CACHE_KEY)
+      packageName: $(PACKAGE_NAME)

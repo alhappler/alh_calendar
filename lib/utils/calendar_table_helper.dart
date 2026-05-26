@@ -23,13 +23,12 @@ class CalendarTableHelper {
   static CalendarMonth buildCurrentCalendarMonth({
     required DateTime date,
     required bool forceSixWeekMonth,
-  }) {
-    return CalendarMonth(
-      weeks:
-          _getCalendarWeeks(date: date, forceSixWeekMonth: forceSixWeekMonth),
-      month: DateTime(date.year, date.month),
-    );
-  }
+  }) =>
+      CalendarMonth(
+        weeks:
+            _getCalendarWeeks(date: date, forceSixWeekMonth: forceSixWeekMonth),
+        month: DateTime(date.year, date.month),
+      );
 
   // returns chunks of all given days as calendarWeeks
   static List<CalendarWeek> _getCalendarWeeks({
@@ -69,12 +68,27 @@ class CalendarTableHelper {
       calendarWeeks.add(newCalendarWeek);
     }
 
-    if (forceSixWeekMonth && calendarWeeks.length == calendarWeekLength) {
-      final start = daysOfNextMonth.isEmpty ? 0 : daysOfNextMonth.last.date.day;
-      final newCalendarWeek = CalendarWeek(
-        days: daysInNextMonth.sublist(start, start + weekSize),
-      );
-      calendarWeeks.add(newCalendarWeek);
+    // Pad with extra weeks of next-month overflow until reaching the minimum.
+    //
+    // This is needed to ensure that the calendar always has the same number of weeks, which
+    // is important for the layout and to avoid jumps when changing months.
+    // Note that 28-day Februaries starting on Monday fit in 4 weeks, which violates
+    // CalendarMonth's invariant `weeks.length ∈ {5, 6}` if we don't pad.
+    final minWeekCount = forceSixWeekMonth ? 6 : calendarWeekLength;
+    while (calendarWeeks.length < minWeekCount) {
+      final lastDay = calendarWeeks.last.days.last.date;
+      final weekDays = <CalendarDay>[];
+      for (var i = 1; i <= weekSize; i++) {
+        final date = DateTime(lastDay.year, lastDay.month, lastDay.day + i);
+        weekDays.add(
+          CalendarDay(
+            date: date,
+            isInCurrentMonth: false,
+            dayOfWeek: DayOfWeek.values[date.weekday - 1],
+          ),
+        );
+      }
+      calendarWeeks.add(CalendarWeek(days: weekDays));
     }
 
     return calendarWeeks;
@@ -83,9 +97,8 @@ class CalendarTableHelper {
   /// Returns on which day of the week the month starts.
   ///
   /// for example: monday or saturday
-  static int _getFirstWeekDayOfMonth(DateTime month) {
-    return DateTime(month.year, month.month, month.day).weekday;
-  }
+  static int _getFirstWeekDayOfMonth(DateTime month) =>
+      DateTime(month.year, month.month, month.day).weekday;
 
   /// Depending on which weekday the month starts, we need to fill the List of days in front.
   ///
@@ -109,9 +122,8 @@ class CalendarTableHelper {
   static List<CalendarDay> _fillDaysInMonthEnd({
     required int weekday,
     required List<CalendarDay> nextMonthDays,
-  }) {
-    return nextMonthDays.sublist(0, DateTime.daysPerWeek - weekday);
-  }
+  }) =>
+      nextMonthDays.sublist(0, DateTime.daysPerWeek - weekday);
 
   /// Returns a list of calendarDays
   ///
@@ -121,8 +133,8 @@ class CalendarTableHelper {
     bool isCurrentMonth,
   ) {
     final totalDays = DateUtils.getDaysInMonth(date.year, date.month);
-    final List<CalendarDay> dateTimeDayList = [];
-    for (int i = 0; i < totalDays; i++) {
+    final dateTimeDayList = <CalendarDay>[];
+    for (var i = 0; i < totalDays; i++) {
       final day = DateTime(date.year, date.month, i + 1);
 
       dateTimeDayList.add(
@@ -151,30 +163,29 @@ class CalendarTableHelper {
     DateTime? minSelectableDate,
     DateTime? maxSelectableDate,
     DateTime? selectedDate,
-  }) {
-    return calendarMonth.weeks
-        .map(
-          (week) => TableRow(
-            children: week.days
-                .map(
-                  (day) => _buildCalendarCell(
-                    showFocusedBorder: showFocusedBorder,
-                    focusedBorderStyle: focusedBorderStyle,
-                    calendarDay: day,
-                    calendarWeek: week,
-                    selectedDate: selectedDate,
-                    dayBuilder: dayBuilder,
-                    onSelectDay: onSelectDay,
-                    disableTapOnOutOfRange: disableTapOnOutOfRange,
-                    minSelectableDate: minSelectableDate,
-                    maxSelectableDate: maxSelectableDate,
-                  ),
-                )
-                .toList(),
-          ),
-        )
-        .toList();
-  }
+  }) =>
+      calendarMonth.weeks
+          .map(
+            (week) => TableRow(
+              children: week.days
+                  .map(
+                    (day) => _buildCalendarCell(
+                      showFocusedBorder: showFocusedBorder,
+                      focusedBorderStyle: focusedBorderStyle,
+                      calendarDay: day,
+                      calendarWeek: week,
+                      selectedDate: selectedDate,
+                      dayBuilder: dayBuilder,
+                      onSelectDay: onSelectDay,
+                      disableTapOnOutOfRange: disableTapOnOutOfRange,
+                      minSelectableDate: minSelectableDate,
+                      maxSelectableDate: maxSelectableDate,
+                    ),
+                  )
+                  .toList(),
+            ),
+          )
+          .toList();
 
   static CalendarCell _buildCalendarCell({
     required CalendarDay calendarDay,

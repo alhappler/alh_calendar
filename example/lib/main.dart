@@ -68,8 +68,14 @@ class _MyAppState extends State<MyApp> {
                     disableNextMonthFromDate: DateTime.now().add(
                       const Duration(days: 10 * 30 + 5),
                     ),
-                    headerLeading: const Icon(Icons.chevron_left),
-                    headerTrailing: const Icon(Icons.chevron_right),
+                    headerLeadingBuilder: (bool enabled) => Icon(
+                      Icons.chevron_left,
+                      color: !enabled ? Theme.of(context).disabledColor : null,
+                    ),
+                    headerTrailingBuilder: (bool enabled) => Icon(
+                      Icons.chevron_right,
+                      color: !enabled ? Theme.of(context).disabledColor : null,
+                    ),
                     daysOfWeek: dayMap,
                     onMonthChanged: (selectedMonth) {
                       log('MONTH HAS CHANGED $selectedMonth');
@@ -84,10 +90,9 @@ class _MyAppState extends State<MyApp> {
                           child: Text(
                             dayOfWeek,
                             style: TextStyle(
-                              color:
-                                  isWeekEnd
-                                      ? Colors.blueAccent
-                                      : Colors.redAccent,
+                              color: isWeekEnd
+                                  ? Colors.blueAccent
+                                  : Colors.redAccent,
                             ),
                           ),
                         ),
@@ -101,13 +106,12 @@ class _MyAppState extends State<MyApp> {
                         ).format(date),
                       );
                     },
-                    dayBuilder: (
-                      CalendarDayBuilderModel calendarDayBuilderModel,
-                    ) {
-                      return CalendarDay(
-                        calendarDayBuilderModel: calendarDayBuilderModel,
-                      );
-                    },
+                    dayBuilder:
+                        (CalendarDayBuilderModel calendarDayBuilderModel) {
+                          return CalendarDay(
+                            calendarDayBuilderModel: calendarDayBuilderModel,
+                          );
+                        },
                   ),
                 ),
               ),

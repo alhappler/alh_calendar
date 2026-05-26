@@ -21,10 +21,9 @@ class CalendarDay extends StatelessWidget {
             child: Text(
               calendarDayBuilderModel.dateTime!.day.toString(),
               style: TextStyle(
-                color:
-                    calendarDayBuilderModel.isOutOfRange == true
-                        ? Colors.redAccent
-                        : Colors.black,
+                color: calendarDayBuilderModel.isOutOfRange == true
+                    ? Colors.redAccent
+                    : Colors.black,
               ),
             ),
           ),

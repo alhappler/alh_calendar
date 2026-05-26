@@ -303,7 +303,7 @@ void main() {
   });
 
   test(
-      'GIVEN two equal CalendarMonths and the second calendarMonth has more weeks'
+      'GIVEN two equal CalendarMonths and the second calendarMonth has more weeks '
       'WHEN == is called '
       'THEN should return false', () {
     // given

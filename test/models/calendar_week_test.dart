@@ -83,18 +83,16 @@ void main() {
     ],
   );
 
-  CalendarWeek setUpCalendarWeek({required int numbersOfDays}) {
-    return CalendarWeek(
-      days: List<CalendarDay>.generate(
-        numbersOfDays,
-        (_) => CalendarDay(
-          date: DateTime(2022, 10, 3),
-          dayOfWeek: DayOfWeek.monday,
-          isInCurrentMonth: false,
+  CalendarWeek setUpCalendarWeek({required int numbersOfDays}) => CalendarWeek(
+        days: List<CalendarDay>.generate(
+          numbersOfDays,
+          (_) => CalendarDay(
+            date: DateTime(2022, 10, 3),
+            dayOfWeek: DayOfWeek.monday,
+            isInCurrentMonth: false,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   test(
       'GIVEN - '

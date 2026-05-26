@@ -28,12 +28,10 @@ void main() {
       'WHEN constructor is called with custom values '
       'THEN should have those custom values', () {
     // given
-    const double givenThickness = 5.0;
+    const givenThickness = 5.0;
     const Color givenColor = Colors.red;
-    const BorderRadius givenHeaderBorderRadius =
-        BorderRadius.all(Radius.circular(20));
-    const BorderRadius givenDaysBorderRadius =
-        BorderRadius.all(Radius.circular(10));
+    const givenHeaderBorderRadius = BorderRadius.all(Radius.circular(20));
+    const givenDaysBorderRadius = BorderRadius.all(Radius.circular(10));
 
     // when
     const actualStyle = FocusedBorderStyle(

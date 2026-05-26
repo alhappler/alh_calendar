@@ -28,28 +28,26 @@ class CalendarHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: headerPadding,
-      child: Row(
-        children: [
-          CalendarHeaderButton(
-            showFocusedBorder: showFocusedBorder,
-            focusedBorderStyle: focusedBorderStyle,
-            icon: iconLeft,
-            padding: iconPadding,
-            onPressed: onPressedPrevious,
-          ),
-          Expanded(child: Center(child: header)),
-          CalendarHeaderButton(
-            showFocusedBorder: showFocusedBorder,
-            focusedBorderStyle: focusedBorderStyle,
-            icon: iconRight,
-            padding: iconPadding,
-            onPressed: onPressedNext,
-          ),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Padding(
+        padding: headerPadding,
+        child: Row(
+          children: [
+            CalendarHeaderButton(
+              showFocusedBorder: showFocusedBorder,
+              focusedBorderStyle: focusedBorderStyle,
+              icon: iconLeft,
+              padding: iconPadding,
+              onPressed: onPressedPrevious,
+            ),
+            Expanded(child: Center(child: header)),
+            CalendarHeaderButton(
+              showFocusedBorder: showFocusedBorder,
+              focusedBorderStyle: focusedBorderStyle,
+              icon: iconRight,
+              padding: iconPadding,
+              onPressed: onPressedNext,
+            ),
+          ],
+        ),
+      );
 }
